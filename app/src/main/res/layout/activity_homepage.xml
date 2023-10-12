@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_launcher_background" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="?android:attr/listDivider" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="177dp"
+            android:scaleType="fitXY"
+            tools:srcCompat="@drawable/ic_launcher_background" />
+
+        <EditText
+            android:id="@+id/etWelcome"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="16dp"
+            android:alpha="0.6"
+            android:autofillHints=""
+            android:gravity="center"
+            android:inputType="text"
+            android:text="Welcome"
+            android:textColor="@color/black"
+            android:textStyle="italic" />
+
+        <LinearLayout
+            android:layout_width="205dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnHotspots"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/customBackgroundColor"
+                android:gravity="center_horizontal"
+                android:text="Hotspots"
+                android:textSize="12sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnGoToSightings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/customBackgroundColor"
+                android:gravity="center_horizontal"
+                android:text="Add Sighting"
+                android:textSize="12sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/customBackgroundColor"
+                android:gravity="center_horizontal"
+                android:text="Account"
+                android:textSize="12sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnPlayGame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/customBackgroundColor"
+                android:gravity="center_horizontal"
+                android:text="Play Quiz Game"
+                android:textSize="12sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/customBackgroundColor"
+                android:gravity="center_horizontal"
+                android:text="Loggout"
+                android:textSize="12sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="21dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
