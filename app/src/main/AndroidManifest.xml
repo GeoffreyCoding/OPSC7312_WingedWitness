@@ -27,6 +27,7 @@
         <!-- AddSightingActivity Declaration -->
         <activity android:name=".AddSightingActivity" />
         <activity android:name=".HomePageActivity"/>
+        <activity android:name=".QuizActivity"/>
     </application>
 
     </manifest>
