@@ -96,6 +96,13 @@ class MainActivity : AppCompatActivity() {
                 val user = GlobalDataClass.UserDataList.find { it.userEmail == email
                         && it.userPassword == password }
                 if (user != null) {
+                    var userData = UserData()
+                    userData.userId = user.userId
+                    userData.userEmail = user.userEmail
+                    userData.userPassword = user.userPassword
+                    userData.metricOrImperial = user.metricOrImperial
+                    userData.lat = user.lat
+                    userData.lng = user.lng
                     val intent = Intent(this, HomePageActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
@@ -119,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                         userData.userId = 0
                         userData.userEmail = email.text.toString()
                         userData.userPassword = password.text.toString()
-                        userData.metricOrImperial = 'M'
+                        userData.metricOrImperial = 'M'.toString()
                         GlobalDataClass.UserDataList.add(userData)
                         Toast.makeText(this, "SignUp Successful!", Toast.LENGTH_SHORT).show()
                         showViews(loginViews)
@@ -130,7 +137,7 @@ class MainActivity : AppCompatActivity() {
                         userData.userId = userId.userId
                         userData.userEmail = email.text.toString()
                         userData.userPassword = password.text.toString()
-                        userData.metricOrImperial = 'M'
+                        userData.metricOrImperial = 'M'.toString()
                         GlobalDataClass.UserDataList.add(userData)
                         Toast.makeText(this, "SignUp Successful!", Toast.LENGTH_SHORT).show()
                         showViews(loginViews)

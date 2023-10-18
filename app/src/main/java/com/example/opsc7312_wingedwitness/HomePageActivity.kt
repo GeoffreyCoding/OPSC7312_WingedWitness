@@ -9,14 +9,6 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 //---------------------------------------------------------------------------------------------------------------------//
 
-//---------------------------------------------------------------------------------------------------------------------//
-//Declarations
-private lateinit var buttonHotspots: Button
-private lateinit var buttonAddSightings: Button
-private lateinit var buttonAccount: Button
-private lateinit var buttonQuiz: Button
-private lateinit var buttonLogout: Button
-
 class HomePageActivity : AppCompatActivity() {
 
     //-----------------------------------------------------------------------------------------------------------------//
@@ -29,7 +21,14 @@ class HomePageActivity : AppCompatActivity() {
         val btnGoToSightings = findViewById<Button>(R.id.btnGoToSightings)
         val btnGoToQiz = findViewById<Button>(R.id.btnPlayGame)
         val btnGoToAccount = findViewById<Button>(R.id.btnAccount)
-
+        val btnHotSpots = findViewById<Button>(R.id.btnHotspots)
+        //-------------------------------------------------------------------------------------------------------------//
+        //Hotspots
+        btnHotSpots.setOnClickListener {
+            val intent = Intent(this, HotSpotsMap::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
         //-------------------------------------------------------------------------------------------------------------//
         //Go to Sightings
         btnGoToSightings.setOnClickListener {
