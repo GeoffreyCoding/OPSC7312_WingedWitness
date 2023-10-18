@@ -20,18 +20,25 @@ import android.location.LocationManager
 import android.media.MediaRecorder
 import android.widget.*
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.concurrent.thread
+
 //---------------------------------------------------------------------------------------------------------------------//
 //Declarations
 private lateinit var edtSightingName:EditText
-private lateinit var edtSightingSpecies:EditText
+private lateinit var spinSightingSpecies:Spinner
 private lateinit var edtSightingLocation:EditText
 private lateinit var edtSightingDate:EditText
 private lateinit var edtSightingCount:EditText
@@ -62,10 +69,11 @@ class AddSightingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addsighting)
         var dataValidation = dataValidation()
+        var selectedItem = ""
 
         //FindViews
         edtSightingName = findViewById(R.id.edtSightingName)
-        edtSightingSpecies = findViewById(R.id.edtSpeciesName)
+        spinSightingSpecies = findViewById(R.id.birdSpeciesSpinner)
         edtSightingLocation = findViewById(R.id.edtSightingLocation)
         edtSightingDate = findViewById(R.id.dpSightingDate)
         edtSightingCount = findViewById(R.id.edtSightingCount)
@@ -73,7 +81,18 @@ class AddSightingActivity : AppCompatActivity() {
         ivCameraBtn = findViewById(R.id.ivCamera)
         ivRecordBird = findViewById(R.id.ivRecordSghting)
         back = findViewById(R.id.Back)
-
+        //-------------------------------------------------------------------------------------------------------------//
+        //Populating spinner with species
+        val speciesList: MutableList<String> = mutableListOf()
+        CoroutineScope(Dispatchers.IO).launch {
+            val tempSpeciesList = getSpeciesList(lat = -33.9249f, lng = 18.4241f)
+            withContext(Dispatchers.Main) {
+                speciesList.addAll(tempSpeciesList)
+                val adapter = ArrayAdapter(this@AddSightingActivity, android.R.layout.simple_spinner_item, speciesList)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinSightingSpecies.adapter = adapter
+            }
+        }
         //-------------------------------------------------------------------------------------------------------------//
         //Allows the user to record the sound of the bird they sighted
         ivRecordBird.setOnClickListener{
@@ -125,15 +144,24 @@ class AddSightingActivity : AppCompatActivity() {
             getCurrentLocation()
         }
 
+        spinSightingSpecies.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                selectedItem = parent.getItemAtPosition(position).toString()
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                selectedItem = parent.getItemAtPosition(1).toString()
+            }
+        }
 
         //-------------------------------------------------------------------------------------------------------------//
         //AddSighting
         btnAddSighting.setOnClickListener{
-
             //get data
             val sCount :String = edtSightingCount.text.toString()
             val sName = edtSightingName.text.toString()
-            val sSpecies = edtSightingSpecies.text.toString()
+            val sSpecies = selectedItem
             val sDate = edtSightingDate.text.toString()
             val sLocation = edtSightingLocation.text.toString()
 

@@ -78,15 +78,12 @@
                 android:layout_marginLeft="150px"
                 android:text="@string/edtSpeciesText" />
 
-            <EditText
-                android:id="@+id/edtSpeciesName"
-                android:layout_width="300dp"
-                android:layout_height="49dp"
+            <Spinner
+                android:id="@+id/birdSpeciesSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="150px"
-                android:layout_marginBottom="15px"
-                android:ems="10"
-                android:inputType="text"
-                android:text="" />
+                android:layout_marginBottom="15px"/>
 
             <TextView
                 android:id="@+id/sightingLocationHeading"

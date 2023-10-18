@@ -2,6 +2,10 @@ package com.example.opsc7312_wingedwitness
 
 import android.net.Uri
 import android.util.Log
+import org.json.JSONArray
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -42,4 +46,30 @@ fun buildURLForAllEbirdInfo(lng: Float, lat: Float): URL? {
     }
     Log.i(LOGGING_TAG, "buildURLForAllEbirdInfo: $url")
     return url
+}
+
+fun getSpeciesList(lat : Float,lng : Float): List<String> {
+    val speciesList = mutableListOf<String>()
+
+    // Use buildURLForAllEbirdInfo as it seems to fetch recent observations
+    val url = buildURLForAllEbirdInfo(lng, lat)
+
+    val urlConnection = url?.openConnection() as HttpURLConnection
+    try {
+        val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+        val result = StringBuilder()
+        reader.forEachLine { result.append(it) }
+
+        val jsonArray = JSONArray(result.toString())
+        for (i in 0 until jsonArray.length()) {
+            val jsonObject = jsonArray.getJSONObject(i)
+            speciesList.add(jsonObject.getString("comName")) // Assuming "comName" is the field containing the species name
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    } finally {
+        urlConnection.disconnect()
+    }
+
+    return speciesList
 }
