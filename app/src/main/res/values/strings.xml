@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">OPSC7312_WingedWitness</string>
+    <string name="enterSightingName">Enter Sighting name</string>
+    <string name="edtSpeciesText">Species</string>
+    <string name="enter_location">Enter Location</string>
+    <string name="take_a_photo">Take a Photo?</string>
+    <string name="add_sighting">Add Sighting</string>
+    <string name="_5_bird_quiz">/5 Bird Quiz</string>
+    <string name="check_answers">Check Answers</string>
 </resources>

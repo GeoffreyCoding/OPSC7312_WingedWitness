@@ -56,14 +56,14 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="text"
-                android:text="Enter Sighting name" />
+                android:text="@string/enterSightingName" />
 
             <TextView
                 android:id="@+id/speciesNameHeading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="150px"
-                android:text="Species" />
+                android:text="@string/edtSpeciesText" />
 
             <EditText
                 android:id="@+id/edtSpeciesName"
@@ -73,7 +73,7 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="text"
-                android:text="Enter species name" />
+                android:text="@string/enterSightingName" />
 
             <TextView
                 android:id="@+id/sightingLocationHeading"
@@ -90,7 +90,7 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="text"
-                android:text="Enter Location" />
+                android:text="@string/enter_location" />
 
             <TextView
                 android:id="@+id/sightingDateHeading"
@@ -107,7 +107,7 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="date"
-                android:text="Enter species name" />
+                android:text="@string/enterSightingName" />
 
             <TextView
                 android:id="@+id/sightingCountHeading"
@@ -124,7 +124,7 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="text"
-                android:text="Enter species name" />
+                android:text="@string/enterSightingName" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -138,7 +138,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="150px"
                     android:layout_weight="1"
-                    android:text="TextView" />
+                    android:text="@string/take_a_photo" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -175,7 +175,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Add Sighting"
+                android:text="@string/add_sighting"
                 />
 
         </LinearLayout>
