@@ -2,8 +2,10 @@ package com.example.opsc7312_wingedwitness
 
 //---------------------------------------------------------------------------------------------------------------------//
 //Imports
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +39,7 @@ class QuizActivity : AppCompatActivity() {
         arrayOf("A duck's quack does not echo?", false),
         arrayOf("The smallest bird in the world is the Bee Hummingbird?", true)
     )
+    private lateinit var back: ImageView
 
     //holds questions that have already been answered
     private var alreadyShownQuestions = mutableListOf<Array<Any>>()
@@ -53,6 +56,7 @@ class QuizActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
 
+        back = findViewById(R.id.Back)
         val recyclerView = findViewById<RecyclerView>(R.id.rvQuestions)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -67,6 +71,14 @@ class QuizActivity : AppCompatActivity() {
         val changeQuestionsButton = findViewById<Button>(R.id.btnReset)
         changeQuestionsButton.setOnClickListener {
             changeQuestions()
+        }
+
+        //-------------------------------------------------------------------------------------------------------------//
+        //Back Button
+        back.setOnClickListener {
+            val intent = Intent(this, HomePageActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         }
 
     }
