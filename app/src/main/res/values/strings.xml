@@ -7,4 +7,7 @@
     <string name="add_sighting">Add Sighting</string>
     <string name="_5_bird_quiz">/5 Bird Quiz</string>
     <string name="check_answers">Check Answers</string>
+
+    <string name="mapbox_access_token">pk.eyJ1IjoiZy1ncm9iYmVsYWFyIiwiYSI6ImNsbTk0NHkzODBmbzIzY3FxaXdidmNic3gifQ.4Kt6hpbO7tdS_cIILl0zfA</string>
+
 </resources>
