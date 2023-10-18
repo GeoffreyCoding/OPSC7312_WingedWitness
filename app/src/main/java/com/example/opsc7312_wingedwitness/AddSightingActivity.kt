@@ -16,15 +16,12 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
 import android.media.MediaRecorder
-<<<<<<< Updated upstream
 import android.widget.*
-=======
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import java.io.File
 import java.io.FileOutputStream
->>>>>>> Stashed changes
 import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
@@ -132,17 +129,17 @@ class AddSightingActivity : AppCompatActivity() {
                     sightingData.imageFilePath = ""
                 }
                 GlobalDataClass.SightingDataList.add(sightingData)
-<<<<<<< Updated upstream
+
                 Toast.makeText(this, "Sighting Added successfully!", Toast.LENGTH_SHORT).show()
 
-=======
+
 
                 Toast.makeText(this, "Sighting Added", Toast.LENGTH_SHORT).show()
 
                 val intent = Intent(this, HomePageActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
->>>>>>> Stashed changes
+
             }
         }
     }
