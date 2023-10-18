@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <uses-feature android:name="android.hardware.camera.any" />
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+
 
     <application
         android:allowBackup="true"
@@ -20,24 +25,22 @@
         android:theme="@style/Theme.OPSC7312_WingedWitness"
         tools:targetApi="31">
         <activity
-            android:name=".Navigation"
-            android:exported="false" />
-        <activity
-            android:name=".HotSpotsMap"
-            android:exported="false" />
-        <activity
-            android:name=".HomePageActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- AddSightingActivity Declaration -->
+        </activity>
+
+        <!-- AddSightingActivity Declaration -->
         <activity android:name=".AddSightingActivity" />
-        <activity android:name=".QuizActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".accounts_page" />
+        <activity android:name=".QuizActivity"/>
+        <activity android:name=".HomePageActivity"/>
+        <activity android:name=".accounts_page"/>
+
     </application>
 
-</manifest>
+    </manifest>
+
+

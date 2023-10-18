@@ -130,7 +130,7 @@
                 android:background="@drawable/rounded_button"
                 android:backgroundTint="@color/customBackgroundColor"
                 android:gravity="center_horizontal"
-                android:text="Loggout"
+                android:text="Logout"
                 android:textSize="12sp" />
 
             <Space

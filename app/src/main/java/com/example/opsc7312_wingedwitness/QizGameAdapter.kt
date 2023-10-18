@@ -1,29 +1,41 @@
 package com.example.opsc7312_wingedwitness
 
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+//---------------------------------------------------------------------------------------------------------------------//
+
 
 class QuizGameAdapter(private var questions: MutableList<String>) :
     RecyclerView.Adapter<QuizGameAdapter.ViewHolder>() {
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Declarations
     private val userAnswers = Array<Boolean?>(questions.size) { null } // Array to store user answers
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Class for the View Holder
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val questionTextView: TextView = view.findViewById(R.id.questionTextView)
         val yesCheckBox: CheckBox = view.findViewById(R.id.yesCheckBox)
         val noCheckBox: CheckBox = view.findViewById(R.id.noCheckBox)
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //OnCreate Method
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragement_quiz, parent, false)
         return ViewHolder(view)
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Binding Method
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val question = questions[position]
         holder.questionTextView.text = question
@@ -47,18 +59,26 @@ class QuizGameAdapter(private var questions: MutableList<String>) :
         }
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Get Count
     override fun getItemCount(): Int {
         return questions.size
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Reset Answers
     fun resetUserAnswers(newQuestions: List<String>) {
         userAnswers.fill(null) // Reset all answers to null
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Get Answers
     fun getUserAnswers(): Array<Boolean?> {
         return userAnswers
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Update Questions
     fun updateQuestions(newQuestions: List<String>) {
         userAnswers.fill(null)
         questions.clear()
@@ -66,4 +86,4 @@ class QuizGameAdapter(private var questions: MutableList<String>) :
         notifyDataSetChanged()
     }
 
-}
+}//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
