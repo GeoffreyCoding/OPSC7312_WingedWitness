@@ -33,15 +33,16 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
+        android:id="@+id/imageView5"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:background="@drawable/rounded_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Heading"
-        app:layout_constraintVertical_bias="0.034"
-        android:background="@drawable/rounded_button"/>
+        app:layout_constraintVertical_bias="0.034" />
 
     <TextView
         android:id="@+id/Heading"
@@ -139,7 +140,7 @@
         android:autofillHints="username"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text=""
+        android:text="Enter your email"
         app:layout_constraintTop_toBottomOf="@+id/LoginEmaillbl"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -168,7 +169,7 @@
         android:layout_height="49dp"
         android:ems="10"
         android:inputType="textPassword"
-        android:text=""
+        android:text="Enter your Password"
         app:layout_constraintTop_toBottomOf="@+id/LoginPasswordlbl"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -283,5 +284,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/View1"
         app:layout_constraintVertical_bias="0.786" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="89dp"
+        android:layout_height="129dp"
+        app:layout_constraintBottom_toTopOf="@+id/View2"
+        app:layout_constraintEnd_toEndOf="@+id/View1"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="@+id/View1"
+        app:layout_constraintTop_toTopOf="@+id/Heading"
+        app:layout_constraintVertical_bias="0.643"
+        tools:srcCompat="@drawable/icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="customBackgroundColor">#679289</color>
     <color name="ErrorColour">#FF0000</color>
+    <color name="grey_background">#D3D3D3</color>
 </resources>

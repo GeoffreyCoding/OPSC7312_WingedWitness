@@ -7,7 +7,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class QuizGameAdapter(private val questions: List<String>) :
+class QuizGameAdapter(private var questions: MutableList<String>) :
     RecyclerView.Adapter<QuizGameAdapter.ViewHolder>() {
 
     private val userAnswers = Array<Boolean?>(questions.size) { null } // Array to store user answers
@@ -36,8 +36,6 @@ class QuizGameAdapter(private val questions: List<String>) :
             if (isChecked) {
                 holder.noCheckBox.isChecked = false
                 userAnswers[position] = true
-            } else {
-                userAnswers[position] = null
             }
         }
 
@@ -45,8 +43,6 @@ class QuizGameAdapter(private val questions: List<String>) :
             if (isChecked) {
                 holder.yesCheckBox.isChecked = false
                 userAnswers[position] = false
-            } else {
-                userAnswers[position] = null
             }
         }
     }
@@ -55,7 +51,19 @@ class QuizGameAdapter(private val questions: List<String>) :
         return questions.size
     }
 
+    fun resetUserAnswers(newQuestions: List<String>) {
+        userAnswers.fill(null) // Reset all answers to null
+    }
+
     fun getUserAnswers(): Array<Boolean?> {
         return userAnswers
     }
+
+    fun updateQuestions(newQuestions: List<String>) {
+        userAnswers.fill(null)
+        questions.clear()
+        questions.addAll(newQuestions)
+        notifyDataSetChanged()
+    }
+
 }
