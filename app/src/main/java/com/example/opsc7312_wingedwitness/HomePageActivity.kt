@@ -34,13 +34,14 @@ class HomePageActivity : AppCompatActivity() {
 
         btnGoToQiz.setOnClickListener{
             val intent = Intent(this, QuizActivity::class.java)
-
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
         btnGoToAccount.setOnClickListener {
             val intent = Intent(this, accounts_page::class.java)
-
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
 
-    }
+
 }}

@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="105dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/largeappicon" />
+            app:srcCompat="@drawable/LargeAppIcon" />
 
         <View
             android:id="@+id/divider4"
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="177dp"
             android:scaleType="fitXY"
-            tools:srcCompat="@drawable/homepagebackground" />
+            tools:srcCompat="@drawable/HomePageBackground" />
 
         <EditText
             android:id="@+id/etWelcome"
