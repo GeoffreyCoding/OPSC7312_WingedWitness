@@ -1,5 +1,7 @@
 package com.example.opsc7312_wingedwitness
 
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
@@ -12,27 +14,36 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import java.io.IOException
+//---------------------------------------------------------------------------------------------------------------------//
+
 
 class SightingAdapter(private val sightings: List<SightingData>) :
     RecyclerView.Adapter<SightingAdapter.SightingViewHolder>() {
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Inner Class
     inner class SightingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        //-----------------------------------------------------------------------------------------------------------------//
+        //Declarations
         val txtSightingName: TextView = itemView.findViewById(R.id.txtSightingName)
         val txtSightingSpecies: TextView = itemView.findViewById(R.id.txtSightingSpecies)
         val txtSightingDate: TextView = itemView.findViewById(R.id.txtSightingDate)
         val txtSightingLocation: TextView = itemView.findViewById(R.id.txtSightingLocation)
         val ivBirdImage: ImageView = itemView.findViewById(R.id.ivBirdImage)
         val playButton: ImageButton = itemView.findViewById(R.id.play)
-
     }
 
-
+    //-----------------------------------------------------------------------------------------------------------------//
+    //On View Holder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SightingViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.sighting_item, parent, false)
         return SightingViewHolder(view)
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Binding
     override fun onBindViewHolder(holder: SightingViewHolder, position: Int) {
         // Bind data to UI elements in the ViewHolder
         val currentSighting = sightings[position]
@@ -53,7 +64,8 @@ class SightingAdapter(private val sightings: List<SightingData>) :
                 .placeholder(R.drawable.plus)
                 .error(R.drawable.info)
                 .into(holder.ivBirdImage)
-        } else {
+        }
+        else {
             Log.d("ImageFilePath", "Image file path is null or empty")
 
             holder.ivBirdImage.setImageResource(R.drawable.icon)
@@ -84,14 +96,12 @@ class SightingAdapter(private val sightings: List<SightingData>) :
                 }
             }
         }
-
-
-
-
     }
 
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Get Count
     override fun getItemCount(): Int {
         return sightings.size
     }
-}
+}//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

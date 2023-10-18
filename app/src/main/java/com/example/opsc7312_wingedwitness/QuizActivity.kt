@@ -1,16 +1,20 @@
 package com.example.opsc7312_wingedwitness
 
-import android.content.Intent
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+//---------------------------------------------------------------------------------------------------------------------//
+
 
 class QuizActivity : AppCompatActivity() {
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Declarations
     private val questionsAndAnswers = listOf(
         arrayOf("All birds have feathers?", true),
         arrayOf("Ostriches can fly?", false),
@@ -33,18 +37,21 @@ class QuizActivity : AppCompatActivity() {
         arrayOf("A duck's quack does not echo?", false),
         arrayOf("The smallest bird in the world is the Bee Hummingbird?", true)
     )
+
     //holds questions that have already been answered
     private var alreadyShownQuestions = mutableListOf<Array<Any>>()
     private var totalCorrectAnswers = 0
+
     // Shuffle and take the first 5 questions
     private var selectedQuestionsAndAnswers = questionsAndAnswers.shuffled().take(5).toTypedArray()
     private var selectedQuestionsOnly = selectedQuestionsAndAnswers.map { it[0] as String }.toList()
     private lateinit var quizAdapter: QuizGameAdapter // reference to adapter
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //OnCreate Method
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
-
 
         val recyclerView = findViewById<RecyclerView>(R.id.rvQuestions)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -62,15 +69,10 @@ class QuizActivity : AppCompatActivity() {
             changeQuestions()
         }
 
-        val back = findViewById<ImageView>(R.id.Back)
-
-        back.setOnClickListener {
-            val intent = Intent(this, HomePageActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
     }
 
+    //-------------------------------------------------------------------------------------------------------------//
+    //Change Questions
     private fun changeQuestions() {
         if (questionsAndAnswers.size == alreadyShownQuestions.size) {
             val totalCorrectAnswers = alreadyShownQuestions.count { it[1] as Boolean == true }
@@ -91,8 +93,8 @@ class QuizActivity : AppCompatActivity() {
         quizAdapter.updateQuestions(selectedQuestionsOnly)
     }
 
-
-
+    //-------------------------------------------------------------------------------------------------------------//
+    //Check Answers
     private fun checkUserAnswers() {
         val userAnswers = quizAdapter.getUserAnswers()
         var correctCount = 0
@@ -104,9 +106,4 @@ class QuizActivity : AppCompatActivity() {
         totalCorrectAnswers += correctCount
         Toast.makeText(this, "For this set, you got $correctCount out of 5 correct! Total: $totalCorrectAnswers out of ${alreadyShownQuestions.size + 5}!", Toast.LENGTH_SHORT).show()
     }
-
-
-
-
-
-}
+}//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

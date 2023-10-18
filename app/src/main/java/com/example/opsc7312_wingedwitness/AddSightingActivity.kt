@@ -1,5 +1,7 @@
 package com.example.opsc7312_wingedwitness
 
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -26,8 +28,8 @@ import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-
-
+//---------------------------------------------------------------------------------------------------------------------//
+//Declarations
 private lateinit var edtSightingName:EditText
 private lateinit var edtSightingSpecies:EditText
 private lateinit var edtSightingLocation:EditText
@@ -36,23 +38,32 @@ private lateinit var edtSightingCount:EditText
 private lateinit var btnAddSighting:Button
 private lateinit var ivRecordBird:ImageView
 private lateinit var ivCameraBtn:ImageView
+private lateinit var back: ImageView
+
 //Audio
 private var mediaRecorder: MediaRecorder? = null
 private var isRecording = false
 private var audioFilePath: String? = null
-private var imageFilePath: String? = null//variables for camera utilization
+private var imageFilePath: String? = null
 
+//Video
 private const val REQUEST_CAMERA_PERMISSION = 100
 private const val REQUEST_IMAGE_CAPTURE = 101
 private const val REQUEST_RECORD_AUDIO_PERMISSION = 101
 private val REQUEST_LOCATION_PERMISSION = 1
+//-----------------------------------------------------------------------------------------------------------------//
+
 
 class AddSightingActivity : AppCompatActivity() {
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //OnCreate Method
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addsighting)
         var dataValidation = dataValidation()
-        //getting edit box views
+
+        //FindViews
         edtSightingName = findViewById(R.id.edtSightingName)
         edtSightingSpecies = findViewById(R.id.edtSpeciesName)
         edtSightingLocation = findViewById(R.id.edtSightingLocation)
@@ -61,6 +72,9 @@ class AddSightingActivity : AppCompatActivity() {
         btnAddSighting = findViewById(R.id.btnAddSighting)
         ivCameraBtn = findViewById(R.id.ivCamera)
         ivRecordBird = findViewById(R.id.ivRecordSghting)
+        back = findViewById(R.id.Back)
+
+        //-------------------------------------------------------------------------------------------------------------//
         //Allows the user to record the sound of the bird they sighted
         ivRecordBird.setOnClickListener{
             if (!isRecording) {
@@ -69,6 +83,16 @@ class AddSightingActivity : AppCompatActivity() {
                 stopRecording()
             }
         }
+
+        //-------------------------------------------------------------------------------------------------------------//
+        //Back Button
+        back.setOnClickListener {
+            val intent = Intent(this, HomePageActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+
+        //-------------------------------------------------------------------------------------------------------------//
         //button click listener to start the validation and the adding of the data to the object
         ivCameraBtn.setOnClickListener {
             // Check for camera permission
@@ -89,24 +113,33 @@ class AddSightingActivity : AppCompatActivity() {
             }
         }
 
+        //-------------------------------------------------------------------------------------------------------------//
+        //DatePicker
         edtSightingDate.setOnClickListener {
             showDatePickerDialog()
         }
 
+        //-------------------------------------------------------------------------------------------------------------//
+        //Location
         edtSightingLocation.setOnClickListener {
             getCurrentLocation()
         }
 
 
+        //-------------------------------------------------------------------------------------------------------------//
+        //AddSighting
         btnAddSighting.setOnClickListener{
+
             //get data
             val sCount :String = edtSightingCount.text.toString()
             val sName = edtSightingName.text.toString()
             val sSpecies = edtSightingSpecies.text.toString()
             val sDate = edtSightingDate.text.toString()
             val sLocation = edtSightingLocation.text.toString()
+
             //validate data
             var isValid = dataValidation.validateSightingInput(sCount,sName, sSpecies ,sLocation)
+
             //save data if valid
             if(isValid){
 
@@ -132,19 +165,15 @@ class AddSightingActivity : AppCompatActivity() {
 
                 Toast.makeText(this, "Sighting Added successfully!", Toast.LENGTH_SHORT).show()
 
-
-
-                Toast.makeText(this, "Sighting Added", Toast.LENGTH_SHORT).show()
-
                 val intent = Intent(this, HomePageActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-
             }
         }
     }
 
-    // Start audio recording
+    //-------------------------------------------------------------------------------------------------------------//
+    //Start audio recording
     private fun startRecording() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -184,7 +213,8 @@ class AddSightingActivity : AppCompatActivity() {
         ivRecordBird.setImageResource(R.drawable.pause)
     }
 
-    // Stop audio recording
+    //-------------------------------------------------------------------------------------------------------------//
+    //Stop audio recording
     private fun stopRecording() {
         mediaRecorder?.apply {
             stop()
@@ -193,23 +223,22 @@ class AddSightingActivity : AppCompatActivity() {
         mediaRecorder = null
         isRecording = false
 
-        // Now you have the audio file path (audioFilePath) that you can use as needed
-        if (audioFilePath != null) {
-            // Process the recorded audio or save it to your desired location
-        }
-
         releaseMediaRecorder() // Release the MediaRecorder after stopping recording
         ivRecordBird.setImageResource(R.drawable.play)
     }
 
-    // Release MediaRecorder
+    //-------------------------------------------------------------------------------------------------------------//
+    //Release MediaRecorder
     private fun releaseMediaRecorder() {
         mediaRecorder?.release()
         mediaRecorder = null
     }
 
 
+    //-------------------------------------------------------------------------------------------------------------//
+    //Open the Camera
     private fun openCamera() {
+
         // Create an intent to capture an image
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
@@ -234,8 +263,11 @@ class AddSightingActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+    //-------------------------------------------------------------------------------------------------------------//
+    //Get Current Location
     private fun getCurrentLocation() {
         if (checkLocationPermission()) {
+
             // Get the location manager
             val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
@@ -262,6 +294,8 @@ class AddSightingActivity : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------------------------------------------//
+    //Get the location address
     private fun getLocationAddress(latitude: Double, longitude: Double): String {
         val geocoder = Geocoder(this, Locale.getDefault())
         val addresses: List<Address>? = geocoder.getFromLocation(latitude, longitude, 1)
@@ -276,9 +310,6 @@ class AddSightingActivity : AppCompatActivity() {
 
 
     //----------------------------------------------------------------------------------------------------------------//
-
-
-
     // Handle permission request results for camera and audio recording
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -304,6 +335,7 @@ class AddSightingActivity : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------------------------------------------//
     // Handle the result of the camera activity
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -317,6 +349,8 @@ class AddSightingActivity : AppCompatActivity() {
         }
     }
 
+    //-------------------------------------------------------------------------------------------------------------//
+    //Save the image
     private fun saveImageToExternalCache(bitmap: Bitmap): String {
         val directory = File(externalCacheDir, "app_images")
         if (!directory.exists()) {
@@ -338,6 +372,8 @@ class AddSightingActivity : AppCompatActivity() {
     }
 
 
+    //-------------------------------------------------------------------------------------------------------------//
+    //Show the date picker
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -353,21 +389,17 @@ class AddSightingActivity : AppCompatActivity() {
             },
             year, month, day
         )
-
         datePickerDialog.show()
     }
 
 
+    //-------------------------------------------------------------------------------------------------------------//
+    //Update the date
     private fun updateDate(calendar: Calendar) {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val selectedDate = dateFormat.format(calendar.time)
 
         edtSightingDate.setText(selectedDate)
-
     }
-
-
-
-
-}
+}//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
 
