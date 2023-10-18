@@ -19,7 +19,11 @@ class HomePageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_homepage)
         // Getting button views
         val btnGoToSightings = findViewById<Button>(R.id.btnGoToSightings)
+<<<<<<< Updated upstream
         val btnGoToQiz = findViewById<Button>(R.id.btnPlayGame)
+=======
+        val btnGoToAccount = findViewById<Button>(R.id.btnAccount)
+>>>>>>> Stashed changes
 
         btnGoToSightings.setOnClickListener {
             val intent = Intent(this, AddSightingActivity::class.java)
@@ -27,11 +31,21 @@ class HomePageActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+<<<<<<< Updated upstream
         btnGoToQiz.setOnClickListener{
             val intent = Intent(this, QuizActivity::class.java)
+=======
+        btnGoToAccount.setOnClickListener {
+            val intent = Intent(this, accounts_page::class.java)
+>>>>>>> Stashed changes
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
     }
 }

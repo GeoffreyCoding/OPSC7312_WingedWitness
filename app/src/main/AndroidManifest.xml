@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+
 
     <application
         android:allowBackup="true"
@@ -16,7 +20,7 @@
         android:theme="@style/Theme.OPSC7312_WingedWitness"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".HomePageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,8 +30,13 @@
 
         <!-- AddSightingActivity Declaration -->
         <activity android:name=".AddSightingActivity" />
+<<<<<<< Updated upstream
         <activity android:name=".HomePageActivity"/>
         <activity android:name=".QuizActivity"/>
+=======
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".accounts_page"/>
+>>>>>>> Stashed changes
     </application>
 
     </manifest>

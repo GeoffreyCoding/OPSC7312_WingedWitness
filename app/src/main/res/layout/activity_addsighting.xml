@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+<ScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,7 +59,12 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="text"
+<<<<<<< Updated upstream
                 android:text="@string/enterSightingName" />
+=======
+                android:text=""
+                android:layout_marginLeft="0dp"/>
+>>>>>>> Stashed changes
 
             <TextView
                 android:id="@+id/speciesNameHeading"
@@ -73,7 +81,11 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="text"
+<<<<<<< Updated upstream
                 android:text="@string/enterSightingName" />
+=======
+                android:text="" />
+>>>>>>> Stashed changes
 
             <TextView
                 android:id="@+id/sightingLocationHeading"
@@ -90,7 +102,13 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="text"
+<<<<<<< Updated upstream
                 android:text="@string/enter_location" />
+=======
+                android:text=""
+                android:focusable="false"
+                android:clickable="true"/>
+>>>>>>> Stashed changes
 
             <TextView
                 android:id="@+id/sightingDateHeading"
@@ -99,7 +117,7 @@
                 android:layout_marginLeft="150px"
                 android:text="Date" />
 
-            <DatePicker
+            <EditText
                 android:id="@+id/dpSightingDate"
                 android:layout_width="300dp"
                 android:layout_height="49dp"
@@ -107,7 +125,14 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="date"
+<<<<<<< Updated upstream
                 android:text="@string/enterSightingName" />
+=======
+                android:text=""
+                android:focusable="false"
+                android:clickable="true" />
+
+>>>>>>> Stashed changes
 
             <TextView
                 android:id="@+id/sightingCountHeading"
@@ -124,7 +149,11 @@
                 android:layout_marginBottom="15px"
                 android:ems="10"
                 android:inputType="text"
+<<<<<<< Updated upstream
                 android:text="@string/enterSightingName" />
+=======
+                android:text="" />
+>>>>>>> Stashed changes
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -138,7 +167,11 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="150px"
                     android:layout_weight="1"
+<<<<<<< Updated upstream
                     android:text="@string/take_a_photo" />
+=======
+                    android:text="Image" />
+>>>>>>> Stashed changes
 
                 <TextView
                     android:id="@+id/textView2"
@@ -147,7 +180,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="150px"
                     android:layout_weight="1"
-                    android:text="TextView" />
+                    android:text="Audio" />
             </LinearLayout>
 
             <LinearLayout
@@ -157,17 +190,19 @@
 
                 <ImageView
                     android:id="@+id/ivCamera"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/icon" />
+                    app:srcCompat="@drawable/image"
+                    android:layout_marginTop="20dp"/>
 
                 <ImageView
                     android:id="@+id/ivRecordSghting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/icon" />
+                    app:srcCompat="@drawable/play"
+                    android:layout_marginTop="20dp"/>
             </LinearLayout>
 
             <Button
@@ -180,4 +215,5 @@
 
         </LinearLayout>
     </LinearLayout>
+</ScrollView>
 </RelativeLayout>
