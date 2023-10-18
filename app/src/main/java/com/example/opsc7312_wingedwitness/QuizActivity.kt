@@ -1,7 +1,9 @@
 package com.example.opsc7312_wingedwitness
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,6 +45,7 @@ class QuizActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
 
+
         val recyclerView = findViewById<RecyclerView>(R.id.rvQuestions)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -59,6 +62,13 @@ class QuizActivity : AppCompatActivity() {
             changeQuestions()
         }
 
+        val back = findViewById<ImageView>(R.id.Back)
+
+        back.setOnClickListener {
+            val intent = Intent(this, HomePageActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
     }
 
     private fun changeQuestions() {
