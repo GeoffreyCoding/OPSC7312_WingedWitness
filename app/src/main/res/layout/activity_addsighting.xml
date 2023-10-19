@@ -94,7 +94,8 @@
                     android:background="@drawable/rounded_button"
                     android:text="Add"
                     android:layout_marginLeft="150px"
-                    android:layout_marginTop="10dp" />
+                    android:layout_marginTop="10dp"
+                    app:backgroundTint="@null"/>
 
                 <!-- Species Name EditText -->
                 <EditText
@@ -227,7 +228,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/add_sighting" />
+                    android:text="@string/add_sighting"
+                    app:backgroundTint="@null"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginBottom="5dp"/>
 
             </LinearLayout>
         </LinearLayout>
