@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:background="#D3D3D3">
 
+    <!-- View1 as a background with rounded corners -->
     <View
         android:id="@+id/View1"
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
         android:layout_marginTop="10dp">
     </View>
 
-
+    <!-- Text view for the sighting name -->
     <TextView
         android:id="@+id/txtSightingName"
         android:layout_width="wrap_content"
@@ -34,7 +35,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.125" />
 
-
+    <!-- Text view for the sighting species -->
     <TextView
         android:id="@+id/txtSightingSpecies"
         android:layout_width="wrap_content"
@@ -49,6 +50,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.316" />
 
+    <!-- Text view for the sighting date -->
     <TextView
         android:id="@+id/txtSightingDate"
         android:layout_width="wrap_content"
@@ -62,6 +64,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Text view for the sighting location -->
     <TextView
         android:id="@+id/txtSightingLocation"
         android:layout_width="220dp"
@@ -78,6 +81,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.867" />
 
+    <!-- ImageView for the bird image -->
     <ImageView
         android:id="@+id/ivBirdImage"
         android:layout_width="100dp"
@@ -89,9 +93,9 @@
         app:layout_constraintHorizontal_bias="0.877"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2"
-        />
+        app:layout_constraintVertical_bias="0.2" />
 
+    <!-- ImageButton for playing -->
     <ImageButton
         android:id="@+id/play"
         android:layout_width="30dp"
@@ -104,6 +108,7 @@
         app:layout_constraintTop_toTopOf="@+id/View1"
         app:layout_constraintVertical_bias="0.792" />
 
+    <!-- ImageButton for additional info -->
     <ImageButton
         android:id="@+id/info"
         android:layout_width="30dp"

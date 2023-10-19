@@ -9,14 +9,6 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 //---------------------------------------------------------------------------------------------------------------------//
 
-//---------------------------------------------------------------------------------------------------------------------//
-//Declarations
-private lateinit var buttonHotspots: Button
-private lateinit var buttonAddSightings: Button
-private lateinit var buttonAccount: Button
-private lateinit var buttonQuiz: Button
-private lateinit var buttonLogout: Button
-
 class HomePageActivity : AppCompatActivity() {
 
     //-----------------------------------------------------------------------------------------------------------------//
@@ -29,6 +21,7 @@ class HomePageActivity : AppCompatActivity() {
         val btnGoToSightings = findViewById<Button>(R.id.btnGoToSightings)
         val btnGoToQiz = findViewById<Button>(R.id.btnPlayGame)
         val btnGoToAccount = findViewById<Button>(R.id.btnAccount)
+        val btnLogout = findViewById<Button>(R.id.btnLogout)
 
         //-------------------------------------------------------------------------------------------------------------//
         //Go to Sightings
@@ -50,6 +43,14 @@ class HomePageActivity : AppCompatActivity() {
         //Go to Account
         btnGoToAccount.setOnClickListener {
             val intent = Intent(this, accounts_page::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+
+        //-------------------------------------------------------------------------------------------------------------//
+        //Logout
+        btnLogout.setOnClickListener {
+            val intent = Intent(this, OpeningPage2::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
