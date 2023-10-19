@@ -71,13 +71,12 @@ class accounts_page : AppCompatActivity() {
         //-------------------------------------------------------------------------------------------------------------//
         //Change metric in userdata
         rbMetric.setOnClickListener{
-            userData.metricOrImperial = "metric"
+            GlobalDataClass.imperialOrMetric = "metric"
         }
         //-------------------------------------------------------------------------------------------------------------//
         //Change Imperial in userdata
         rbImperial.setOnClickListener{
-            userData.metricOrImperial = "imperial"
+            GlobalDataClass.imperialOrMetric = "imperial"
         }
     }
-
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

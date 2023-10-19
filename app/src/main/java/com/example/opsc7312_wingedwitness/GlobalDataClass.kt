@@ -14,5 +14,6 @@ class GlobalDataClass: Application() {
         var UserDataList = arrayListOf<UserData>()
         var SightingDataList = arrayListOf<SightingData>()
         var QuizDataList = arrayListOf<QuizData>()
+        var imperialOrMetric:String = "metric"
     }
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
