@@ -1,5 +1,10 @@
 package com.example.opsc7312_wingedwitness
-
+/*-----------------------------------------------
+OPSC7312_POE_PART2
+Geoffrey Huth - ST10081932
+Gabriel Grobbelaar - ST10082002
+Liam Colbert - ST10081986
+-----------------------------------------------*/
 //---------------------------------------------------------------------------------------------------------------------//
 //Imports
 import android.content.Intent
@@ -197,6 +202,9 @@ class AddSightingActivity : AppCompatActivity() {
                 val intent = Intent(this, HomePageActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
+            }
+            else {
+                Toast.makeText(this, "Please full in all fields and use acceptable input", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="529dp"
                 android:orientation="vertical"
-                android:background="@color/grey_background">
+                android:background="@color/white">
 
                 <!-- RecyclerView for displaying questions -->
                 <androidx.recyclerview.widget.RecyclerView
@@ -78,7 +78,8 @@
                     android:layout_marginLeft="20dp"
                     android:text="Next Questions"
                     android:background="@drawable/rounded_button"
-                    app:backgroundTint="@null"/>
+                    app:backgroundTint="@null"
+                    android:layout_marginBottom="5dp"/>
 
                 <!-- Button for checking answers -->
                 <Button
@@ -90,7 +91,8 @@
                     android:layout_marginRight="20dp"
                     android:text="@string/check_answers"
                     android:background="@drawable/rounded_button"
-                    app:backgroundTint="@null"/>
+                    app:backgroundTint="@null"
+                    android:layout_marginBottom="5dp"/>
 
             </LinearLayout>
 
