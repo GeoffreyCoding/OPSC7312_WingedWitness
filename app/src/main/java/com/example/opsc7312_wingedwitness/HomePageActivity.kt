@@ -64,7 +64,7 @@ class HomePageActivity : AppCompatActivity() {
         //-------------------------------------------------------------------------------------------------------------//
         //Logout
         btnLogout.setOnClickListener {
-            val intent = Intent(this, OpeningPage2::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
