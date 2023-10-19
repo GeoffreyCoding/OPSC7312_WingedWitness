@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             }
             else{
 
-                if (email.text.toString().isNotEmpty() && password.text.toString().isNotEmpty() && password.text.toString() == confPassword.text.toString()) {
+                if (dataValidation.validateSingUpInput(email.text.toString(),password.text.toString(),confPassword.text.toString())) {
 
                     // Input is valid, create UserData object
                     errorLabel.visibility = View.INVISIBLE
