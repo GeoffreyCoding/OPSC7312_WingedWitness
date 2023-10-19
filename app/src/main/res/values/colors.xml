@@ -10,4 +10,10 @@
     <color name="customBackgroundColor">#679289</color>
     <color name="ErrorColour">#FF0000</color>
     <color name="grey_background">#D3D3D3</color>
+
+
+    /// MapBox colours
+
+    <color name="colorPrimary">@color/mapboxGray</color>
+    <color name="mapboxGray">#607d9c</color>
 </resources>
