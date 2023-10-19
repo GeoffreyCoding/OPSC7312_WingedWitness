@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="529dp"
                 android:orientation="vertical"
-                android:background="@color/grey_background">
+                android:background="@color/white">
 
                 <!-- RecyclerView for displaying questions -->
                 <androidx.recyclerview.widget.RecyclerView

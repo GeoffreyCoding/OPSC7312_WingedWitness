@@ -23,7 +23,7 @@ class BirdSpeciesFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
         fetchSpeciesAndShowDialog(builder)
-        return builder.create() // This will be a placeholder until the real dialog is shown
+        return builder.create()
     }
 
     private fun fetchSpeciesAndShowDialog(builder: AlertDialog.Builder) {
@@ -40,9 +40,8 @@ class BirdSpeciesFragment : DialogFragment() {
         builder.setTitle("Choose Bird Species")
             .setSingleChoiceItems(species, -1) { dialogInterface, which ->
                 val selectedSpecies = species[which]
-                // Handle the selected species, e.g., update the EditText
                 (activity as? AddSightingActivity)?.setSelectedSpecies(selectedSpecies)
-                dialogInterface.dismiss()  // This dismisses the dialog
+                dialogInterface.dismiss()
             }
         builder.show()
     }
