@@ -12,6 +12,8 @@ import com.example.opsc7312_wingedwitness.databinding.ActivityHotSpotsMapBinding
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.mapbox.android.core.permissions.PermissionsListener
+import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.common.location.Location
 import com.mapbox.geojson.Point
@@ -42,11 +44,12 @@ import kotlin.concurrent.thread
 
 class HotSpotsMap : AppCompatActivity() {
 
-
     private var mapView: MapView? = null
     private var emulatorLatitude: Double = 0.0
-    private var emulatorLongitude: Double= 0.0
+    private var emulatorLongitude: Double = 0.0
     private var dist: Double = 2.0
+
+    private lateinit var permissionsManager: PermissionsManager
 
     private var progressDialog: ProgressDialog? = null
 
@@ -123,60 +126,65 @@ class HotSpotsMap : AppCompatActivity() {
         binding = ActivityHotSpotsMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        progressDialog = ProgressDialog(this)
-        progressDialog?.setMessage("Loading...") // Set your loading message
-        progressDialog?.setCancelable(false)
+        locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
+        locationPermissionHelper.checkPermissions {
 
-        mapView = findViewById(R.id.mapView)
-        setupDistanceSpinner(this.mapView!!)
-        mapView?.getMapboxMap()?.loadStyleUri(MAPBOX_STREETS) {
-            locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
-            locationPermissionHelper.checkPermissions { onMapReady() }
-            mapView?.location?.updateSettings {
-                enabled = true
-                pulsingEnabled = true
-            }
-        }
+            progressDialog = ProgressDialog(this)
+            progressDialog?.setMessage("Loading...") // Set your loading message
+            progressDialog?.setCancelable(false)
 
-        backButton = findViewById(R.id.btnBack)
-        backButton.setOnClickListener {
-            val intent = Intent(this, HomePageActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
+            mapView = findViewById(R.id.mapView)
+            setupDistanceSpinner(this.mapView!!)
+            mapView?.getMapboxMap()?.loadStyleUri(MAPBOX_STREETS) {
 
-        userButton = findViewById(R.id.userLocation)
-        userButton.setOnClickListener{
-            mapView?.camera?.easeTo(
-                CameraOptions.Builder()
-                    // Centers the camera to the lng/lat specified.
-                    .center(Point.fromLngLat(emulatorLongitude, emulatorLatitude))
-                    // specifies the zoom value. Increase or decrease to zoom in or zoom out
-                    .zoom(14.0)
-                    // specify frame of reference from the center.
-                    .padding(EdgeInsets(500.0, 0.0, 0.0, 0.0))
-                    .build(),
-            )
-        }
-
-        myButton = findViewById(R.id.fabLocation)
-        myButton.setOnClickListener {
-            ///ClearBirdPointAnnotation(mapView)
-            // Show the ProgressDialog
-            progressDialog?.show()
-
-            thread {
-                val bird = try {
-                    buildURLForEbird(emulatorLatitude.toFloat(), emulatorLongitude.toFloat(), dist)?.readText()
-                } catch (e: Exception) {
-                    return@thread
+                onMapReady()
+                mapView?.location?.updateSettings {
+                    enabled = true
+                    pulsingEnabled = true
                 }
+            }
 
-                runOnUiThread { consumeHotSpotsBirdJson(bird) }
-                progressDialog?.dismiss()
+            backButton = findViewById(R.id.btnBack)
+            backButton.setOnClickListener {
+                val intent = Intent(this, HomePageActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
 
+            userButton = findViewById(R.id.userLocation)
+            userButton.setOnClickListener{
+                mapView?.camera?.easeTo(
+                    CameraOptions.Builder()
+                        // Centers the camera to the lng/lat specified.
+                        .center(Point.fromLngLat(emulatorLongitude, emulatorLatitude))
+                        // specifies the zoom value. Increase or decrease to zoom in or zoom out
+                        .zoom(14.0)
+                        // specify frame of reference from the center.
+                        .padding(EdgeInsets(500.0, 0.0, 0.0, 0.0))
+                        .build(),
+                )
+            }
+
+            myButton = findViewById(R.id.fabLocation)
+            myButton.setOnClickListener {
+                ///ClearBirdPointAnnotation(mapView)
+                // Show the ProgressDialog
+                progressDialog?.show()
+
+                thread {
+                    val bird = try {
+                        buildURLForEbird(emulatorLatitude.toFloat(), emulatorLongitude.toFloat(), dist)?.readText()
+                    } catch (e: Exception) {
+                        return@thread
+                    }
+
+                    runOnUiThread { consumeHotSpotsBirdJson(bird) }
+                    progressDialog?.dismiss()
+
+                }
             }
         }
+
     }
 
     ///------------------------------------------------------------------------------------------///
@@ -311,14 +319,27 @@ class HotSpotsMap : AppCompatActivity() {
                 // Replace the previous code with the addBirdPointAnnotation function
                 mapBoxHelper.addBirdPointAnnotation(mapView!!, bird) { markerCoordinates ->
                     // Handle the bird marker click event here
-                    findBirdsWithinRadius(markerCoordinates.latitude, markerCoordinates.longitude) { matchingBirds ->
+                    findBirdsWithinRadius(
+                        markerCoordinates.latitude,
+                        markerCoordinates.longitude
+                    ) { matchingBirds ->
                         if (matchingBirds.isNotEmpty()) {
                             // Handle the case when matching birds are found
-                            showMarkerFragment(bird.name, markerCoordinates, LatLng(emulatorLatitude, emulatorLongitude), matchingBirds)
+                            showMarkerFragment(
+                                bird.name,
+                                markerCoordinates,
+                                LatLng(emulatorLatitude, emulatorLongitude),
+                                matchingBirds
+                            )
                         } else {
                             // Handle the case when no matching birds are found
-                            Toast.makeText(this, "Marker Clicked: ${bird.name}", Toast.LENGTH_SHORT).show()
-                            createMarkerFragmentWithoutBirds(bird.name, markerCoordinates, LatLng(emulatorLatitude, emulatorLongitude))
+                            Toast.makeText(this, "Marker Clicked: ${bird.name}", Toast.LENGTH_SHORT)
+                                .show()
+                            createMarkerFragmentWithoutBirds(
+                                bird.name,
+                                markerCoordinates,
+                                LatLng(emulatorLatitude, emulatorLongitude)
+                            )
                         }
                     }
                 }
@@ -418,17 +439,18 @@ class HotSpotsMap : AppCompatActivity() {
 
     ///------------------------------------------------------------------------------------------///
 
-    private val mapboxNavigation: MapboxNavigation by requireMapboxNavigation(onResumedObserver = object : MapboxNavigationObserver {
-        @SuppressLint("MissingPermission")
-        override fun onAttached(mapboxNavigation: MapboxNavigation) {
-            mapboxNavigation.registerLocationObserver(locationObserver)
-            mapboxNavigation.startTripSession()
-        }
+    private val mapboxNavigation: MapboxNavigation by requireMapboxNavigation(
+        onResumedObserver = object : MapboxNavigationObserver {
+            @SuppressLint("MissingPermission")
+            override fun onAttached(mapboxNavigation: MapboxNavigation) {
+                mapboxNavigation.registerLocationObserver(locationObserver)
+                mapboxNavigation.startTripSession()
+            }
 
-        override fun onDetached(mapboxNavigation: MapboxNavigation) {
-            mapboxNavigation.unregisterLocationObserver(locationObserver)
-        }
-    },
+            override fun onDetached(mapboxNavigation: MapboxNavigation) {
+                mapboxNavigation.unregisterLocationObserver(locationObserver)
+            }
+        },
         onInitialize = this::initNavigation
     )
 
@@ -499,7 +521,6 @@ class HotSpotsMap : AppCompatActivity() {
             ?.removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
         this.mapView?.gestures?.removeOnMoveListener(onMoveListener)
     }
-
 ///------------------------------------------------------------------------------------------///
 
 }

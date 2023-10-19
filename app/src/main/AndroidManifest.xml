@@ -4,14 +4,10 @@
     <uses-feature android:name="android.hardware.camera.any" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 
 
@@ -33,11 +29,14 @@
             </intent-filter>
         </activity>
 
+
         <!-- AddSightingActivity Declaration -->
         <activity android:name=".AddSightingActivity" />
         <activity android:name=".QuizActivity"/>
         <activity android:name=".HomePageActivity"/>
         <activity android:name=".accounts_page"/>
+        <activity android:name=".HotSpotsMap"/>
+        <activity android:name=".Navigation"/>
 
     </application>
 

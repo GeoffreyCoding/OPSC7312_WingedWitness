@@ -16,30 +16,35 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
+import android.location.Location
 import android.location.LocationManager
 import android.media.MediaRecorder
 import android.widget.*
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+
 //---------------------------------------------------------------------------------------------------------------------//
 //Declarations
-private lateinit var edtSightingName:EditText
-private lateinit var edtSightingSpecies:EditText
-private lateinit var edtSightingLocation:EditText
-private lateinit var edtSightingDate:EditText
-private lateinit var edtSightingCount:EditText
-private lateinit var btnAddSighting:Button
-private lateinit var ivRecordBird:ImageView
-private lateinit var ivCameraBtn:ImageView
+private lateinit var edtSightingName: EditText
+private lateinit var edtSightingSpecies: EditText
+private lateinit var edtSightingLocation: EditText
+private lateinit var edtSightingDate: EditText
+private lateinit var edtSightingCount: EditText
+private lateinit var btnAddSighting: Button
+private lateinit var ivRecordBird: ImageView
+private lateinit var ivCameraBtn: ImageView
 private lateinit var back: ImageView
 
+private lateinit var userLocation: Location
 //Audio
 private var mediaRecorder: MediaRecorder? = null
 private var isRecording = false
@@ -56,12 +61,18 @@ private val REQUEST_LOCATION_PERMISSION = 1
 
 class AddSightingActivity : AppCompatActivity() {
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+
     //-----------------------------------------------------------------------------------------------------------------//
     //OnCreate Method
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addsighting)
         var dataValidation = dataValidation()
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
 
         //FindViews
         edtSightingName = findViewById(R.id.edtSightingName)
@@ -76,7 +87,7 @@ class AddSightingActivity : AppCompatActivity() {
 
         //-------------------------------------------------------------------------------------------------------------//
         //Allows the user to record the sound of the bird they sighted
-        ivRecordBird.setOnClickListener{
+        ivRecordBird.setOnClickListener {
             if (!isRecording) {
                 startRecording()
             } else {
@@ -122,26 +133,26 @@ class AddSightingActivity : AppCompatActivity() {
         //-------------------------------------------------------------------------------------------------------------//
         //Location
         edtSightingLocation.setOnClickListener {
-            getCurrentLocation()
+            requestLocation()
         }
 
 
         //-------------------------------------------------------------------------------------------------------------//
         //AddSighting
-        btnAddSighting.setOnClickListener{
+        btnAddSighting.setOnClickListener {
 
             //get data
-            val sCount :String = edtSightingCount.text.toString()
+            val sCount: String = edtSightingCount.text.toString()
             val sName = edtSightingName.text.toString()
             val sSpecies = edtSightingSpecies.text.toString()
             val sDate = edtSightingDate.text.toString()
             val sLocation = edtSightingLocation.text.toString()
 
             //validate data
-            var isValid = dataValidation.validateSightingInput(sCount,sName, sSpecies ,sLocation)
+            var isValid = dataValidation.validateSightingInput(sCount, sName, sSpecies, sLocation)
 
             //save data if valid
-            if(isValid){
+            if (isValid) {
 
                 var sightingData = SightingData()
                 sightingData.sightingId = 0
@@ -151,14 +162,14 @@ class AddSightingActivity : AppCompatActivity() {
                 sightingData.sightingDate = sDate
                 sightingData.sightingName = sName
                 sightingData.sightingSpecies = sSpecies
-                if(audioFilePath != null){
+                if (audioFilePath != null) {
                     sightingData.audioFilePath = audioFilePath
-                }else{
+                } else {
                     sightingData.audioFilePath = ""
                 }
-                if(imageFilePath != null){
+                if (imageFilePath != null) {
                     sightingData.imageFilePath = imageFilePath
-                }else{
+                } else {
                     sightingData.imageFilePath = ""
                 }
                 GlobalDataClass.SightingDataList.add(sightingData)
@@ -265,33 +276,33 @@ class AddSightingActivity : AppCompatActivity() {
 
     //-------------------------------------------------------------------------------------------------------------//
     //Get Current Location
-    private fun getCurrentLocation() {
-        if (checkLocationPermission()) {
 
-            // Get the location manager
-            val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+    private fun requestLocation() {
+        if(checkLocationPermission()) {
+            Log.d("Location", "requestLocation called")
+            val fusedLocationClient: FusedLocationProviderClient =
+                LocationServices.getFusedLocationProviderClient(this)
 
-            // Get the last known location
-            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-
-            if (location == null) {
-                //val latitude = location.latitude
-                //val longitude = location.longitude
-
-                val latitude = -34.1337
-                val longitude = 18.4241
-
-                // Update the UI or use the location data as needed
-                val address = getLocationAddress(latitude, longitude)
-                edtSightingLocation.setText(address)
-            } else {
-                // Handle the case where the location is not available
-                Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show()
+            if (ActivityCompat.checkSelfPermission(
+                    this, Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this, Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
             }
-        } else {
-            // Request location permission if not granted
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    userLocation = location
+                    edtSightingLocation.setText(getLocationAddress(userLocation.latitude, userLocation.longitude))
+                    Log.d("Region Code", getLocationAddress(userLocation.latitude, userLocation.longitude))
+                }
+            }
+        }else{
             requestLocationPermission()
         }
+
+
     }
 
     //-------------------------------------------------------------------------------------------------------------//
@@ -311,11 +322,7 @@ class AddSightingActivity : AppCompatActivity() {
 
     //----------------------------------------------------------------------------------------------------------------//
     // Handle permission request results for camera and audio recording
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_CAMERA_PERMISSION -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

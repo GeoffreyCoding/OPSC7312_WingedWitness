@@ -26,9 +26,18 @@ class HomePageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_homepage)
 
         //FindViews
+        val btnGoToHotSpotsMap = findViewById<Button>(R.id.btnHotspots)
         val btnGoToSightings = findViewById<Button>(R.id.btnGoToSightings)
         val btnGoToQiz = findViewById<Button>(R.id.btnPlayGame)
         val btnGoToAccount = findViewById<Button>(R.id.btnAccount)
+
+        //-------------------------------------------------------------------------------------------------------------//
+        //Go to Map
+        btnGoToHotSpotsMap.setOnClickListener {
+            val intent = Intent(this, HotSpotsMap::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
 
         //-------------------------------------------------------------------------------------------------------------//
         //Go to Sightings
