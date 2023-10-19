@@ -2,6 +2,7 @@ package com.example.opsc7312_wingedwitness
 
 //---------------------------------------------------------------------------------------------------------------------//
 //Imports
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import java.io.IOException
@@ -32,6 +34,7 @@ class SightingAdapter(private val sightings: List<SightingData>) :
         val txtSightingLocation: TextView = itemView.findViewById(R.id.txtSightingLocation)
         val ivBirdImage: ImageView = itemView.findViewById(R.id.ivBirdImage)
         val playButton: ImageButton = itemView.findViewById(R.id.play)
+        val infoButton : ImageButton = itemView.findViewById(R.id.info)
     }
 
     //-----------------------------------------------------------------------------------------------------------------//
@@ -95,6 +98,14 @@ class SightingAdapter(private val sightings: List<SightingData>) :
                     mediaPlayer.release()
                 }
             }
+        }
+
+        holder.infoButton.setOnClickListener{
+            var url = "https://en.wikipedia.org/wiki/"
+            url += currentSighting.sightingSpecies
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            holder.itemView.context.startActivity(intent)
         }
     }
 

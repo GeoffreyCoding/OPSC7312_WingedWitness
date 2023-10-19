@@ -1,142 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    >
 
+    <!-- Outer LinearLayout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="match_parent"
-            android:layout_height="105dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/largeappicon" />
-
-        <View
-            android:id="@+id/divider4"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="?android:attr/listDivider" />
-
+        <!-- Background Image ImageView -->
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="match_parent"
             android:layout_height="177dp"
-            android:scaleType="fitXY"
-            tools:srcCompat="@drawable/homepagebackground" />
+            android:scaleType="centerCrop"
+            android:layout_weight="1"
+            android:src="@drawable/homepagebackground"/>
 
-        <EditText
+        <!-- Welcome TextView -->
+        <TextView
             android:id="@+id/etWelcome"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginStart="25dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="16dp"
-            android:alpha="0.6"
-            android:autofillHints=""
             android:gravity="center"
-            android:inputType="text"
-            android:text="Welcome"
-            android:textColor="@color/black"
-            android:textStyle="italic" />
+            android:text="Welcome to WingedWitness"
+            android:textColor="@android:color/black"
+            android:textStyle="italic"
+            android:enabled="false"
+            android:alpha="0.6"
+            android:textSize="20dp"/>
 
+        <!-- Inner LinearLayout for Buttons -->
         <LinearLayout
-            android:layout_width="205dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
 
+            <!-- Hotspots Button -->
             <Button
                 android:id="@+id/btnHotspots"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/customBackgroundColor"
-                android:gravity="center_horizontal"
                 android:text="Hotspots"
-                android:textSize="12sp" />
+                android:textSize="14sp"
+                android:background="@drawable/rounded_button"
+                app:backgroundTint="@null"/>
 
+            <!-- Spacing -->
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_weight="1" />
+                android:layout_height="12dp" />
 
+            <!-- Go To Sightings Button -->
             <Button
                 android:id="@+id/btnGoToSightings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/customBackgroundColor"
-                android:gravity="center_horizontal"
                 android:text="Add Sighting"
-                android:textSize="12sp" />
+                android:textSize="14sp"
+                android:background="@drawable/rounded_button"
+                app:backgroundTint="@null"/>
 
+            <!-- Spacing -->
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_weight="1" />
+                android:layout_height="12dp" />
 
+            <!-- Account Button -->
             <Button
                 android:id="@+id/btnAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/customBackgroundColor"
-                android:gravity="center_horizontal"
                 android:text="Account"
-                android:textSize="12sp" />
+                android:textSize="14sp"
+                android:background="@drawable/rounded_button"
+                app:backgroundTint="@null"/>
 
+            <!-- Spacing -->
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_weight="1" />
+                android:layout_height="12dp" />
 
+            <!-- Play Game Button -->
             <Button
                 android:id="@+id/btnPlayGame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/customBackgroundColor"
-                android:gravity="center_horizontal"
                 android:text="Play Quiz Game"
-                android:textSize="12sp" />
+                android:textSize="14sp"
+                android:background="@drawable/rounded_button"
+                app:backgroundTint="@null"/>
 
+            <!-- Spacing -->
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_weight="1" />
+                android:layout_height="12dp" />
 
+            <!-- Logout Button -->
             <Button
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/customBackgroundColor"
-                android:gravity="center_horizontal"
                 android:text="Logout"
-                android:textSize="12sp" />
+                android:textSize="14sp"
+                android:background="@drawable/rounded_button"
+                app:backgroundTint="@null"/>
 
+            <!-- Spacing -->
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="21dp"
-                android:layout_weight="1" />
+                android:layout_height="12dp" />
 
         </LinearLayout>
     </LinearLayout>

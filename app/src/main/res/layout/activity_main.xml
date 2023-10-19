@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
+    <!-- Background Views -->
     <View
         android:id="@+id/View1"
         android:layout_width="417dp"
@@ -32,6 +32,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <!-- App Icon ImageView -->
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="100dp"
@@ -43,6 +44,7 @@
         app:layout_constraintTop_toBottomOf="@+id/Heading"
         app:layout_constraintVertical_bias="0.034" />
 
+    <!-- Heading TextView -->
     <TextView
         android:id="@+id/Heading"
         android:layout_width="311dp"
@@ -57,7 +59,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023" />
 
-
+    <!-- Login TextView -->
     <TextView
         android:id="@+id/loginTextView"
         android:layout_width="wrap_content"
@@ -76,7 +78,7 @@
         app:layout_constraintTop_toBottomOf="@+id/Heading"
         app:layout_constraintVertical_bias="0.183" />
 
-
+    <!-- Sign-Up TextView -->
     <TextView
         android:id="@+id/signUpTextView"
         android:layout_width="wrap_content"
@@ -95,15 +97,16 @@
         app:layout_constraintTop_toBottomOf="@+id/Heading"
         app:layout_constraintVertical_bias="0.183" />
 
+    <!-- Underlines for Login and Sign-Up -->
     <View
         android:id="@+id/loginUnderline"
         android:layout_width="110dp"
         android:layout_height="6dp"
         android:background="@color/customBackgroundColor"
+        app:layout_constraintBottom_toTopOf="@+id/View2"
         app:layout_constraintEnd_toEndOf="@id/loginTextView"
         app:layout_constraintStart_toStartOf="@id/loginTextView"
-        app:layout_constraintTop_toBottomOf="@id/loginTextView"
-        />
+        app:layout_constraintTop_toBottomOf="@id/loginTextView" />
 
     <View
         android:id="@+id/signUpUnderline"
@@ -113,9 +116,9 @@
         app:layout_constraintTop_toBottomOf="@id/signUpTextView"
         app:layout_constraintStart_toStartOf="@id/signUpTextView"
         app:layout_constraintEnd_toEndOf="@id/signUpTextView"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
-
+    <!-- Login Section -->
     <TextView
         android:id="@+id/LoginEmaillbl"
         android:layout_width="wrap_content"
@@ -146,7 +149,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="visible"/>
 
-
     <TextView
         android:id="@+id/LoginPasswordlbl"
         android:layout_width="wrap_content"
@@ -175,7 +177,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="visible"/>
 
-
+    <!-- Sign-Up Section -->
     <TextView
         android:id="@+id/SignUpEmaillbl"
         android:layout_width="wrap_content"
@@ -229,7 +231,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SignUpPasswordlbl" />
 
-
     <TextView
         android:id="@+id/SignUpConfirmlbl"
         android:layout_width="wrap_content"
@@ -255,7 +256,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SignUpConfirmlbl" />
 
-
+    <!-- Login Button -->
     <Button
         android:id="@+id/buttonLogin"
         android:layout_width="300dp"
@@ -271,6 +272,7 @@
         app:layout_constraintTop_toTopOf="@+id/View2"
         app:layout_constraintVertical_bias="0.872" />
 
+    <!-- Error TextView -->
     <TextView
         android:id="@+id/txtErrorLabel"
         android:layout_width="wrap_content"
@@ -285,16 +287,15 @@
         app:layout_constraintVertical_bias="0.786"
         android:visibility="gone"/>
 
+    <!-- App Icon ImageView -->
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/icon2"
         app:layout_constraintBottom_toTopOf="@+id/View2"
         app:layout_constraintEnd_toEndOf="@+id/View1"
-        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="@+id/View1"
         app:layout_constraintTop_toTopOf="@+id/Heading"
-        app:layout_constraintVertical_bias="0.643"
-        tools:srcCompat="@drawable/icon" />
-
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
