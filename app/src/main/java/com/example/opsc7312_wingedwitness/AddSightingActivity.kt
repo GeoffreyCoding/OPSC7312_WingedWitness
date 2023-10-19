@@ -195,6 +195,9 @@ class AddSightingActivity : AppCompatActivity() {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
+            else {
+                Toast.makeText(this, "Please full in all fields and use acceptable input", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

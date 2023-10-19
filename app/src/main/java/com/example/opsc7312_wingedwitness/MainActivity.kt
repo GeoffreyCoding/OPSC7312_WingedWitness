@@ -10,7 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.android.gestures.Utils
+//import com.mapbox.android.gestures.Utils
 import kotlin.concurrent.thread
 
 //---------------------------------------------------------------------------------------------------------------------//
@@ -151,6 +151,7 @@ class MainActivity : AppCompatActivity() {
                 else {
                     // Handle invalid input (e.g., display an error message)
                     errorLabel.visibility = View.VISIBLE
+                    Toast.makeText(this, "Error password must be at least 6 characters long and email must be valid", Toast.LENGTH_SHORT).show()
                 }
             }
         }
