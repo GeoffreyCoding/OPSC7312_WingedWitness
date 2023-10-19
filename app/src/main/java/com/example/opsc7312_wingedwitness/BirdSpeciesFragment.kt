@@ -2,10 +2,17 @@ package com.example.opsc7312_wingedwitness
 
 //---------------------------------------------------------------------------------------------------------------------//
 //Imports
+import android.R
 import android.app.Dialog
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
 import androidx.appcompat.app.AlertDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 //---------------------------------------------------------------------------------------------------------------------//
 
 
@@ -14,48 +21,29 @@ class BirdSpeciesFragment : DialogFragment() {
     //-----------------------------------------------------------------------------------------------------------------//
     //Method to populate the fragment
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val species = arrayOf(
-            "African Penguin",
-            "Black Harrier",
-            "Cape Sugarbird",
-            "Cape Weaver",
-            "Karoo Prinia",
-            "Malachite Sunbird",
-            "Southern Double-collared Sunbird",
-            "African Fish Eagle",
-            "African Hoopoe",
-            "Secretarybird",
-            "Orange-breasted Sunbird",
-            "Southern Red Bishop",
-            "Pied Kingfisher",
-            "Helmeted Guineafowl",
-            "African Sacred Ibis",
-            "Southern Pale Chanting Goshawk",
-            "African Spoonbill",
-            "Black-headed Heron",
-            "Southern Masked Weaver",
-            "Cape Glossy Starling",
-            "Kelp Gull",
-            "African Black Oystercatcher",
-            "African Olive Pigeon",
-            "Cape Rock Thrush",
-            "White-necked Raven",
-            "African Darter",
-            "Common Ostrich",
-            "Crowned Cormorant",
-            "Eurasian Curlew",
-        )
-
-
         val builder = AlertDialog.Builder(requireActivity())
+        fetchSpeciesAndShowDialog(builder)
+        return builder.create() // This will be a placeholder until the real dialog is shown
+    }
+
+    private fun fetchSpeciesAndShowDialog(builder: AlertDialog.Builder) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val tempSpeciesList = getSpeciesListForWesternCape()
+            withContext(Dispatchers.Main) {
+                val species = tempSpeciesList.toTypedArray()
+                buildAndShowSpeciesDialog(builder, species)
+            }
+        }
+    }
+
+    private fun buildAndShowSpeciesDialog(builder: AlertDialog.Builder, species: Array<String>) {
         builder.setTitle("Choose Bird Species")
-            .setSingleChoiceItems(species, -1) { _, which ->
+            .setSingleChoiceItems(species, -1) { dialogInterface, which ->
                 val selectedSpecies = species[which]
                 // Handle the selected species, e.g., update the EditText
                 (activity as? AddSightingActivity)?.setSelectedSpecies(selectedSpecies)
-                dismiss()
+                dialogInterface.dismiss()  // This dismisses the dialog
             }
-
-        return builder.create()
+        builder.show()
     }
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

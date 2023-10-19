@@ -3,7 +3,6 @@ package com.example.opsc7312_wingedwitness
 import android.app.Application
 
 class GlobalDataClass: Application() {
-
     //-----------------------------------------------------------------------------------------------------------------//
     //Companion object to work with the login and signup
     companion object{
