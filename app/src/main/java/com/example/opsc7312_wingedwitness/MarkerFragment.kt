@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng
 
 class MarkerFragment : Fragment() {
 
+
     ///------------------------------------------------------------------------------------------///
 
     private fun dismissFragment() {
@@ -67,15 +68,15 @@ class MarkerFragment : Fragment() {
                     intent.putExtra("emulongitude", emulatorCoordinates.longitude)
                 }
             }
+
             startActivity(intent)
         }
+
+        val tvBird = view.findViewById<TextView>(R.id.tv_bird)
 
         if (matchingBirds != null && matchingBirds.isNotEmpty()) {
 
             // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
-            val tvBird = view.findViewById<TextView>(R.id.tv_bird)
-
-
             val birdNames = matchingBirds.joinToString("\n") { "Bird Name: ${it.comName}\n" +
                     "Bird Species: ${it.sciName}\n" +
                     "Bird Date: ${it.obsDt}\n" +
@@ -108,7 +109,7 @@ class MarkerFragment : Fragment() {
             return fragment
         }
 
-        fun newInstanceWithoutBirds(placeName: String, markerCoordinates: LatLng, emulatorCoordinates: LatLng): MarkerFragment {
+        fun newInstanceWithoutBirds(placeName: String, markerCoordinates: LatLng, emulatorCoordinates: LatLng, ): MarkerFragment {
             val fragment = MarkerFragment()
             val args = Bundle()
             args.putString("placeName", placeName)

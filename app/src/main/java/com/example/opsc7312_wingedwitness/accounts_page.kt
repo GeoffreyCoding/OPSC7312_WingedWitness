@@ -1,5 +1,10 @@
 package com.example.opsc7312_wingedwitness
-
+/*-----------------------------------------------
+OPSC7312_POE_PART2
+Geoffrey Huth - ST10081932
+Gabriel Grobbelaar - ST10082002
+Liam Colbert - ST10081986
+-----------------------------------------------*/
 //---------------------------------------------------------------------------------------------------------------------//
 //Imports
 import android.content.Intent
@@ -29,13 +34,21 @@ class accounts_page : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accounts_page)
-        var userData = UserData()
         //FindViews
         addEntry = findViewById(R.id.addEntry)
         back = findViewById(R.id.Back)
         recyclerView = findViewById(R.id.recyclerView)
         rbMetric = findViewById(R.id.radioButtonMetric)
         rbImperial = findViewById(R.id.radioButtonImperial)
+        //Changing base setting of imperial or metric
+        var imperialOrMetric = GlobalDataClass.imperialOrMetric
+        if (imperialOrMetric == "metric") {
+            rbMetric.isChecked = true
+            rbImperial.isChecked = false
+        } else {
+            rbMetric.isChecked = false
+            rbImperial.isChecked = true
+        }
         //-------------------------------------------------------------------------------------------------------------//
         //Add Entry
         addEntry.setOnClickListener {
@@ -66,13 +79,12 @@ class accounts_page : AppCompatActivity() {
         //-------------------------------------------------------------------------------------------------------------//
         //Change metric in userdata
         rbMetric.setOnClickListener{
-            userData.metricOrImperial = "metric"
+            GlobalDataClass.imperialOrMetric = "metric"
         }
         //-------------------------------------------------------------------------------------------------------------//
         //Change Imperial in userdata
         rbImperial.setOnClickListener{
-            userData.metricOrImperial = "imperial"
+            GlobalDataClass.imperialOrMetric = "imperial"
         }
     }
-
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

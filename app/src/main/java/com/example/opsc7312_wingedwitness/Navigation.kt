@@ -1,6 +1,7 @@
 package com.example.opsc7312_wingedwitness
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.location.Location
@@ -63,9 +64,9 @@ import com.mapbox.navigation.ui.voice.model.SpeechError
 import com.mapbox.navigation.ui.voice.model.SpeechValue
 import com.mapbox.navigation.ui.voice.model.SpeechVolume
 import java.util.*
+import kotlin.properties.Delegates
 
 class Navigation : AppCompatActivity() {
-    private val metric: String = "metric"
 
     private companion object {
         private const val BUTTON_ANIMATION_DURATION = 1500L
@@ -283,6 +284,7 @@ class Navigation : AppCompatActivity() {
                         .maxDuration(0) // instant transition
                         .build()
                 )
+
             }
         }
     }
@@ -430,31 +432,61 @@ class Navigation : AppCompatActivity() {
             viewportDataSource.followingPadding = followingPadding
         }
 
+        if(GlobalDataClass.imperialOrMetric == "metric"){
+            val distanceFormatterOptions = DistanceFormatterOptions.Builder(this).unitType(UnitType.METRIC).build()
+
+            // initialize maneuver api that feeds the data to the top banner maneuver view
+            maneuverApi = MapboxManeuverApi(
+                MapboxDistanceFormatter(distanceFormatterOptions)
+            )
+
+            // initialize bottom progress view
+            tripProgressApi = MapboxTripProgressApi(
+                TripProgressUpdateFormatter.Builder(this)
+                    .distanceRemainingFormatter(
+                        DistanceRemainingFormatter(distanceFormatterOptions)
+                    )
+                    .timeRemainingFormatter(
+                        TimeRemainingFormatter(this)
+                    )
+                    .percentRouteTraveledFormatter(
+                        PercentDistanceTraveledFormatter()
+                    )
+                    .estimatedTimeToArrivalFormatter(
+                        EstimatedTimeToArrivalFormatter(this, TimeFormat.NONE_SPECIFIED)
+                    )
+                    .build()
+            )
+        }else {
+            val distanceFormatterOptions = DistanceFormatterOptions.Builder(this).unitType(UnitType.IMPERIAL).build()
+
+            // initialize maneuver api that feeds the data to the top banner maneuver view
+            maneuverApi = MapboxManeuverApi(
+                MapboxDistanceFormatter(distanceFormatterOptions)
+            )
+
+            // initialize bottom progress view
+            tripProgressApi = MapboxTripProgressApi(
+                TripProgressUpdateFormatter.Builder(this)
+                    .distanceRemainingFormatter(
+                        DistanceRemainingFormatter(distanceFormatterOptions)
+                    )
+                    .timeRemainingFormatter(
+                        TimeRemainingFormatter(this)
+                    )
+                    .percentRouteTraveledFormatter(
+                        PercentDistanceTraveledFormatter()
+                    )
+                    .estimatedTimeToArrivalFormatter(
+                        EstimatedTimeToArrivalFormatter(this, TimeFormat.NONE_SPECIFIED)
+                    )
+                    .build()
+            )
+        }
         // make sure to use the same DistanceFormatterOptions across different features
-        val distanceFormatterOptions = DistanceFormatterOptions.Builder(this).unitType(UnitType.METRIC).build()
 
-        // initialize maneuver api that feeds the data to the top banner maneuver view
-        maneuverApi = MapboxManeuverApi(
-            MapboxDistanceFormatter(distanceFormatterOptions)
-        )
 
-        // initialize bottom progress view
-        tripProgressApi = MapboxTripProgressApi(
-            TripProgressUpdateFormatter.Builder(this)
-                .distanceRemainingFormatter(
-                    DistanceRemainingFormatter(distanceFormatterOptions)
-                )
-                .timeRemainingFormatter(
-                    TimeRemainingFormatter(this)
-                )
-                .percentRouteTraveledFormatter(
-                    PercentDistanceTraveledFormatter()
-                )
-                .estimatedTimeToArrivalFormatter(
-                    EstimatedTimeToArrivalFormatter(this, TimeFormat.NONE_SPECIFIED)
-                )
-                .build()
-        )
+
 
         // initialize voice instructions api and the voice instruction player
         speechApi = MapboxSpeechApi(
@@ -502,6 +534,9 @@ class Navigation : AppCompatActivity() {
         binding.stop.setOnClickListener {
             clearRouteAndStopNavigation()
             finish()
+            val intent = Intent(this, HotSpotsMap::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         }
         binding.recenter.setOnClickListener {
             navigationCamera.requestNavigationCameraToFollowing()
@@ -522,6 +557,7 @@ class Navigation : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+
         mapboxReplayer.finish()
         maneuverApi.cancel()
         routeLineApi.cancel()
@@ -535,7 +571,7 @@ class Navigation : AppCompatActivity() {
             NavigationOptions.Builder(this)
                 .accessToken(getString(R.string.mapbox_access_token))
                 // comment out the location engine setting block to disable simulation
-                .locationEngine(replayLocationEngine)
+                //.locationEngine(replayLocationEngine)
                 .build()
         )
 
@@ -556,14 +592,14 @@ class Navigation : AppCompatActivity() {
     }
 
     private fun replayOriginLocation() {
-        val emulatitude = intent.getDoubleExtra("emulatitude", 0.0)
-        val emulongitude = intent.getDoubleExtra("emulongitude", 0.0)
+        var emulatitude = intent.getDoubleExtra("emulatitude", 0.0)
+        var emulongitude = intent.getDoubleExtra("emulongitude", 0.0)
 
         mapboxReplayer.pushEvents(
             listOf(
                 ReplayRouteMapper.mapToUpdateLocation(
                     Date().time.toDouble(),
-                    Point.fromLngLat(emulongitude, emulatitude)
+                    Point.fromLngLat(emulatitude, emulongitude)
                 )
             )
 
@@ -573,15 +609,14 @@ class Navigation : AppCompatActivity() {
     }
 
     private fun findRoute(destination: Point) {
+        val userData = UserData()
+
         val emulatitude = intent.getDoubleExtra("emulatitude", 0.0)
         val emulongitude = intent.getDoubleExtra("emulongitude", 0.0)
-
 
         val originLocation = navigationLocationProvider.lastLocation
         val originPoint = originLocation?.let {
             Point.fromLngLat(emulongitude, emulatitude) } ?: return
-
-
 
         // execute a route request
         // it's recommended to use the
@@ -592,7 +627,7 @@ class Navigation : AppCompatActivity() {
             RouteOptions.builder()
                 .applyDefaultNavigationOptions()
                 .applyLanguageAndVoiceUnitOptions(this)
-                .voiceUnits(metric)
+                .voiceUnits(GlobalDataClass.imperialOrMetric)
                 .steps(true)
                 .voiceInstructions(true)
                 .coordinatesList(listOf(originPoint, destination))

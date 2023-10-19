@@ -1,5 +1,10 @@
 package com.example.opsc7312_wingedwitness
-
+/*-----------------------------------------------
+OPSC7312_POE_PART2
+Geoffrey Huth - ST10081932
+Gabriel Grobbelaar - ST10082002
+Liam Colbert - ST10081986
+-----------------------------------------------*/
 //---------------------------------------------------------------------------------------------------------------------//
 //Imports
 import android.content.Intent
@@ -10,7 +15,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mapbox.android.gestures.Utils
+//import com.mapbox.android.gestures.Utils
 import kotlin.concurrent.thread
 
 //---------------------------------------------------------------------------------------------------------------------//
@@ -119,11 +124,11 @@ class MainActivity : AppCompatActivity() {
             }
             else{
 
-                if (email.text.toString().isNotEmpty() && password.text.toString().isNotEmpty() && password.text.toString() == confPassword.text.toString()) {
+                if (dataValidation.validateSingUpInput(email.text.toString(),password.text.toString(),confPassword.text.toString())) {
 
                     // Input is valid, create UserData object
                     errorLabel.visibility = View.INVISIBLE
-                     val userData = UserData()
+                    val userData = UserData()
                     val userId = getLowestInt()
                     if(userId == null){
                         userData.userId = 0
@@ -147,10 +152,11 @@ class MainActivity : AppCompatActivity() {
                         hideViews(signUpViews)
                         buttonLogin.text = "LogIn"
                     }
-                    }
+                }
                 else {
                     // Handle invalid input (e.g., display an error message)
                     errorLabel.visibility = View.VISIBLE
+                    Toast.makeText(this, "Error password must be at least 6 characters long and email must be valid", Toast.LENGTH_SHORT).show()
                 }
             }
         }

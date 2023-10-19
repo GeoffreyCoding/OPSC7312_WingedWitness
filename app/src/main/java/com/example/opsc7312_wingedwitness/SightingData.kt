@@ -19,4 +19,6 @@ class SightingData {
     var sightingLocation: String = ""
     var imageFilePath: String? = null
     var audioFilePath: String? = null
+    var sightingLat:Double = 0.0
+    var sightingLng:Double = 0.0
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

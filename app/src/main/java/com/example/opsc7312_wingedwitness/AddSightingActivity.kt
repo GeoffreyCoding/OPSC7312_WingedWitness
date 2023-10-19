@@ -177,6 +177,9 @@ class AddSightingActivity : AppCompatActivity() {
                 sightingData.sightingDate = sDate
                 sightingData.sightingName = sName
                 sightingData.sightingSpecies = sSpecies
+                sightingData.sightingLat = userLocation.latitude
+                sightingData.sightingLng = userLocation.longitude
+
                 if (audioFilePath != null) {
                     sightingData.audioFilePath = audioFilePath
                 } else {
