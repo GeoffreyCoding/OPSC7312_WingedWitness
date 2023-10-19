@@ -34,13 +34,21 @@ class accounts_page : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accounts_page)
-        var userData = UserData()
         //FindViews
         addEntry = findViewById(R.id.addEntry)
         back = findViewById(R.id.Back)
         recyclerView = findViewById(R.id.recyclerView)
         rbMetric = findViewById(R.id.radioButtonMetric)
         rbImperial = findViewById(R.id.radioButtonImperial)
+        //Changing base setting of imperial or metric
+        var imperialOrMetric = GlobalDataClass.imperialOrMetric
+        if (imperialOrMetric == "metric") {
+            rbMetric.isChecked = true
+            rbImperial.isChecked = false
+        } else {
+            rbMetric.isChecked = false
+            rbImperial.isChecked = true
+        }
         //-------------------------------------------------------------------------------------------------------------//
         //Add Entry
         addEntry.setOnClickListener {
