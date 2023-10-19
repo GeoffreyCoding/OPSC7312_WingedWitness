@@ -103,6 +103,7 @@
         android:layout_width="110dp"
         android:layout_height="6dp"
         android:background="@color/customBackgroundColor"
+        app:layout_constraintBottom_toTopOf="@+id/View2"
         app:layout_constraintEnd_toEndOf="@id/loginTextView"
         app:layout_constraintStart_toStartOf="@id/loginTextView"
         app:layout_constraintTop_toBottomOf="@id/loginTextView" />
@@ -289,13 +290,12 @@
     <!-- App Icon ImageView -->
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/icon2"
         app:layout_constraintBottom_toTopOf="@+id/View2"
         app:layout_constraintEnd_toEndOf="@+id/View1"
-        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="@+id/View1"
         app:layout_constraintTop_toTopOf="@+id/Heading"
-        app:layout_constraintVertical_bias="0.643"
-        android:background="@drawable/icon"/>
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
