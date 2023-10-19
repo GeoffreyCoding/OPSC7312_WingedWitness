@@ -43,7 +43,7 @@ private lateinit var btnAddSighting: Button
 private lateinit var ivRecordBird: ImageView
 private lateinit var ivCameraBtn: ImageView
 private lateinit var back: ImageView
-
+private lateinit var btnSpecies:Button
 private lateinit var userLocation: Location
 //Audio
 private var mediaRecorder: MediaRecorder? = null
@@ -61,8 +61,16 @@ private val REQUEST_LOCATION_PERMISSION = 1
 
 class AddSightingActivity : AppCompatActivity() {
 
+    private lateinit var selectedSpecies: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Function for the Species
+    fun setSelectedSpecies(species: String) {
+        selectedSpecies = species
+        edtSightingSpecies.setText(species)
+    }
 
     //-----------------------------------------------------------------------------------------------------------------//
     //OnCreate Method
@@ -84,6 +92,13 @@ class AddSightingActivity : AppCompatActivity() {
         ivCameraBtn = findViewById(R.id.ivCamera)
         ivRecordBird = findViewById(R.id.ivRecordSghting)
         back = findViewById(R.id.Back)
+        btnSpecies = findViewById(R.id.btnSpecies)
+
+
+        //Add the Species
+        btnSpecies.setOnClickListener {
+            showBirdSpeciesDialog()
+        }
 
         //-------------------------------------------------------------------------------------------------------------//
         //Allows the user to record the sound of the bird they sighted
@@ -407,6 +422,13 @@ class AddSightingActivity : AppCompatActivity() {
         val selectedDate = dateFormat.format(calendar.time)
 
         edtSightingDate.setText(selectedDate)
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Show the fragment and allow the user to select the species
+    private fun showBirdSpeciesDialog() {
+        val fragment = BirdSpeciesFragment()
+        fragment.show(supportFragmentManager, BirdSpeciesFragment::class.java.simpleName)
     }
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
 
