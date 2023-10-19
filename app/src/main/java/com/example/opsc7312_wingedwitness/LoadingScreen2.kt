@@ -7,23 +7,15 @@ Liam Colbert - ST10081986
 -----------------------------------------------*/
 //---------------------------------------------------------------------------------------------------------------------//
 //Imports
-import android.media.Image
-import java.util.Date
-//---------------------------------------------------------------------------------------------------------------------//
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 
-class SightingData {
+class LoadingScreen2 : AppCompatActivity() {
 
     //-----------------------------------------------------------------------------------------------------------------//
-    //Declarations
-    var sightingId: Int = 0
-    var userId: Int = 0
-    var sightingName: String = ""
-    var sightingSpecies: String = ""
-    var sightingCount: Int = 0
-    var sightingDate: String = ""
-    var sightingLocation: String = ""
-    var imageFilePath: String? = null
-    var audioFilePath: String? = null
-    var sightingLat:Double = 0.0
-    var sightingLng:Double = 0.0
+    //OnCreate Method
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_loading_screen2)
+    }
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

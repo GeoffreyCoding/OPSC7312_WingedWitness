@@ -1,7 +1,14 @@
 package com.example.opsc7312_wingedwitness
-
+/*-----------------------------------------------
+OPSC7312_POE_PART2
+Geoffrey Huth - ST10081932
+Gabriel Grobbelaar - ST10082002
+Liam Colbert - ST10081986
+-----------------------------------------------*/
 class dataValidation {
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Validate the SignUp input
      fun validateSingUpInput(email: String, password: String,confirmationPassword:String): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
 
@@ -22,6 +29,8 @@ class dataValidation {
         return true
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Validate the SignUp input
     fun validateSightingInput(
         sCount: String,
         sName: String,
@@ -47,4 +56,4 @@ class dataValidation {
 
         return true
     }
-}
+}//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
