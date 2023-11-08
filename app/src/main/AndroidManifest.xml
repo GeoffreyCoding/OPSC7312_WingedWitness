@@ -24,10 +24,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <!-- AddSightingActivity Declaration -->
@@ -35,7 +32,13 @@
         <activity android:name=".AddSightingActivity" />
         <activity android:name=".HotSpotsMap" />
         <activity android:name=".QuizActivity"/>
-        <activity android:name=".HomePageActivity"/>
+        <activity android:name=".HomePageActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".accounts_page"/>
 
     </application>

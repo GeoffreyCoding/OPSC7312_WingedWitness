@@ -80,6 +80,34 @@ class HotSpotHelper {
         }
     }
 
+    fun addUserBirdPointAnnotation(mapView: MapView, onBirdClick: (LatLng) -> Unit) {
+        for (bird in GlobalDataClass.SightingDataList){
+            bitmapFromDrawableRes(mapView.context, R.drawable.baseline_location_on_24)?.let { bitmap ->
+                val annotationApi = mapView.annotations
+                val pointAnnotationManager = annotationApi.createPointAnnotationManager()
+
+                val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
+                    .withIconSize(1.5)
+                    .withTextField(bird.sightingName)
+                    .withTextSize(0.0)
+                    .withPoint(Point.fromLngLat(bird.sightingLng, bird.sightingLat))
+                    .withIconImage(bitmap)
+
+                pointAnnotationManager.create(pointAnnotationOptions)
+                pointAnnotationManager.addClickListener { pointAnnotation ->
+                    val markerCoordinates = LatLng(
+                        pointAnnotation.geometry.latitude(),
+                        pointAnnotation.geometry.longitude()
+                    )
+
+                    onBirdClick(markerCoordinates)
+
+                    true
+                }
+            }
+        }
+
+    }
     ///--------------------------------------------------------------------------------------------------------------///
 }
 //-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

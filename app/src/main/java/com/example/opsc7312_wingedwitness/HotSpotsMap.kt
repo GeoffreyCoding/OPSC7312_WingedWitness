@@ -17,8 +17,6 @@ import com.example.opsc7312_wingedwitness.databinding.ActivityHotSpotsMapBinding
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mapbox.android.core.permissions.PermissionsListener
-import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.common.location.Location
 import com.mapbox.geojson.Point
@@ -152,6 +150,8 @@ class HotSpotsMap : AppCompatActivity() {
             backButton = findViewById(R.id.btnBack)
             backButton.setOnClickListener {
                 val intent = Intent(this, HomePageActivity::class.java)
+                val sightingData = SightingData()
+                intent.putExtra("sightingData", sightingData)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
@@ -188,6 +188,7 @@ class HotSpotsMap : AppCompatActivity() {
                     }
 
                     runOnUiThread { consumeHotSpotsBirdJson(bird) }
+                    runOnUiThread {addUserBirdPointAnnotation()}
                     progressDialog?.dismiss()
 
                 }
@@ -244,13 +245,8 @@ class HotSpotsMap : AppCompatActivity() {
 
     ///------------------------------------------------------------------------------------------///
 
-    private fun findBirdsWithinRadius(
-        markerCoordinateslat: Double,
-        markerCoordinatesng: Double,
-        callback: (List<ToolBox.TestBird>) -> Unit
-    ) {
+    private fun findBirdsWithinRadius(markerCoordinateslat: Double, markerCoordinatesng: Double, callback: (List<ToolBox.TestBird>) -> Unit) {
         // Make an asynchronous network request to fetch bird data
-
         thread {
             val birdData = try {
                 val birdURL = buildURLForAllEbirdInfo(
@@ -261,7 +257,6 @@ class HotSpotsMap : AppCompatActivity() {
             } catch (e: Exception) {
                 null
             }
-
             runOnUiThread {
                 if (!birdData.isNullOrBlank()) {
                     // Parse the bird data here
@@ -358,6 +353,35 @@ class HotSpotsMap : AppCompatActivity() {
         }
     }
 
+    private fun addUserBirdPointAnnotation() {
+
+        for (bird in GlobalDataClass.SightingDataList) {
+            val myBirdHotspots = ToolBox.BirdHotspots(bird.sightingName, bird.sightingLat.toFloat(), bird.sightingLng.toFloat())
+            birdHotSpotList.add(myBirdHotspots)
+
+            // Replace the previous code with the addBirdPointAnnotation function
+            mapBoxHelper.addUserBirdPointAnnotation(mapView!!) { markerCoordinates ->
+                // Handle the bird marker click event here
+                    if (GlobalDataClass.SightingDataList.isNotEmpty()) {
+                        // Handle the case when matching birds are found
+                        showUserSightedBirdsFragment(
+                            bird.sightingLocation,
+                            markerCoordinates,
+                            LatLng(emulatorLatitude, emulatorLongitude)
+                        )
+                    } else {
+                        // Handle the case when no matching birds are found
+                        Toast.makeText(this, "Marker Clicked: ${bird.sightingLocation}", Toast.LENGTH_SHORT)
+                            .show()
+                        createMarkerFragmentWithoutBirds(
+                            bird.sightingLocation,
+                            markerCoordinates,
+                            LatLng(emulatorLatitude, emulatorLongitude)
+                        )
+                    }
+                }
+            }
+        }
 
 ///------------------------------------------------------------------------------------------///
 /// Display marker fragment
@@ -371,6 +395,25 @@ class HotSpotsMap : AppCompatActivity() {
         val fragment = markerName?.let { it1 ->
             MarkerFragment.newInstance(it1, markerCoordinates, emulatorCoordinates, matchingBirds)
         }
+
+        if (fragment != null) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragmentContainer, fragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+    }
+
+    private fun showUserSightedBirdsFragment(
+        placeName: String,
+        markerCoordinates: LatLng,
+        emulatorCoordinates: LatLng,
+    ) {
+        val fragment = MarkerFragment.newInstanceForUserSightedBirds(
+            placeName,
+            markerCoordinates,
+            emulatorCoordinates,
+        )
 
         if (fragment != null) {
             val transaction = supportFragmentManager.beginTransaction()
@@ -453,11 +496,7 @@ class HotSpotsMap : AppCompatActivity() {
 
 ///------------------------------------------------------------------------------------------///
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }

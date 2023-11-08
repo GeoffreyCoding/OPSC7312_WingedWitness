@@ -41,6 +41,7 @@ class MarkerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val userSightedBirds = arguments?.getSerializable("userSightedBirds") as List<SightingData>?
         val matchingBirds = arguments?.getSerializable("matchingBirds") as List<ToolBox.TestBird>?
         val placeName = arguments?.getString("placeName")
         val markerCoordinates = arguments?.getParcelable<LatLng>("markerCoordinates")
@@ -80,7 +81,6 @@ class MarkerFragment : Fragment() {
         val tvBird = view.findViewById<TextView>(R.id.tv_bird)
 
         if (matchingBirds != null && matchingBirds.isNotEmpty()) {
-
             // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
             val birdNames = matchingBirds.joinToString("\n") { "Bird Name: ${it.comName}\n" +
                     "Bird Species: ${it.sciName}\n" +
@@ -88,7 +88,9 @@ class MarkerFragment : Fragment() {
                     "Bird Count: ${it.howMany}\n"}
             tvBird.text = birdNames
             // Set the text of the TextView to the bird names
-        }else {
+        }else if (GlobalDataClass.SightingDataList != null && GlobalDataClass.SightingDataList.isNotEmpty()) {
+            updateUserSightedBirdsData()}
+        else {
             setNoBirdsMessage()
         }
     }
@@ -97,6 +99,22 @@ class MarkerFragment : Fragment() {
     private fun setNoBirdsMessage() {
         val tvBird = view?.findViewById<TextView>(R.id.tv_bird)
         tvBird?.text = "No birds were recently spotted in this area."
+    }
+
+    private fun updateUserSightedBirdsData() {
+        val tvBird = view?.findViewById<TextView>(R.id.tv_bird)
+
+        if (GlobalDataClass.SightingDataList.isNotEmpty()) {
+            // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
+            val birdNames = GlobalDataClass.SightingDataList.joinToString("\n") { "Sighted Bird:\n" +
+                    "Bird Name: ${it.sightingName}\n" +
+                    "Date: ${it.sightingDate}\n" +
+                    "Location: ${it.sightingLocation}\n" }
+            tvBird?.text = birdNames
+            // Set the text of the TextView to the user-sighted bird data
+        } else {
+            setNoBirdsMessage()
+        }
     }
 
     ///-----------------------------------------------------------------------------------------------------------------///
@@ -120,6 +138,22 @@ class MarkerFragment : Fragment() {
             args.putString("placeName", placeName)
             args.putParcelable("markerCoordinates", markerCoordinates)
             args.putParcelable("emulatorCoordinates", emulatorCoordinates)
+            fragment.arguments = args
+            return fragment
+        }
+
+        fun newInstanceForUserSightedBirds(
+            placeName: String,
+            markerCoordinates: LatLng,
+            emulatorCoordinates: LatLng
+        ): MarkerFragment {
+            val fragment = MarkerFragment()
+            val args = Bundle()
+            args.putString("placeName", placeName)
+            args.putParcelable("markerCoordinates", markerCoordinates)
+            args.putParcelable("emulatorCoordinates", emulatorCoordinates)
+            // Pass the user-sighted bird data to the fragment
+            args.putSerializable("userSightedBirds", ArrayList(GlobalDataClass.SightingDataList))
             fragment.arguments = args
             return fragment
         }
