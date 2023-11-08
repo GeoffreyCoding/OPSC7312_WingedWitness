@@ -9,7 +9,7 @@ apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
     namespace 'com.example.opsc7312_wingedwitness'
-    compileSdk 33
+    compileSdk 34
 
     viewBinding {
         enabled = true
@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId "com.example.opsc7312_wingedwitness"
         minSdk 23
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 

@@ -21,14 +21,14 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 class HotSpotHelper {
 
-    ///------------------------------------------------------------------------------------------///
-
+    ///--------------------------------------------------------------------------------------------------------------///
+    /// Setting the marker location.
 
     fun bitmapFromDrawableRes(context: Context, @DrawableRes resourceId: Int) =
         convertDrawableToBitmap(AppCompatResources.getDrawable(context, resourceId))
 
-    ///------------------------------------------------------------------------------------------///
-
+    ///--------------------------------------------------------------------------------------------------------------///
+    /// Converts the drawable to a bitmap.
 
     fun convertDrawableToBitmap(sourceDrawable: Drawable?): Bitmap? {
         if (sourceDrawable == null) {
@@ -51,8 +51,8 @@ class HotSpotHelper {
         }
     }
 
-    ///------------------------------------------------------------------------------------------///
-
+    ///--------------------------------------------------------------------------------------------------------------///
+    /// Creates a marker for the birds hotspots.
 
     fun addBirdPointAnnotation(mapView: MapView, bird: ToolBox.Birds, onBirdClick: (LatLng) -> Unit) {
         bitmapFromDrawableRes(mapView.context, R.drawable.baseline_location_on_24)?.let { bitmap ->
@@ -80,5 +80,6 @@ class HotSpotHelper {
         }
     }
 
-    ///------------------------------------------------------------------------------------------///
+    ///--------------------------------------------------------------------------------------------------------------///
 }
+//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

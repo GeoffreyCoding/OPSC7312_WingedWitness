@@ -20,13 +20,13 @@ import com.google.android.gms.maps.model.LatLng
 class MarkerFragment : Fragment() {
 
 
-    ///------------------------------------------------------------------------------------------///
+    ///-----------------------------------------------------------------------------------------------------------------///
 
     private fun dismissFragment() {
         fragmentManager?.beginTransaction()?.remove(this)?.commit()
     }
 
-    ///------------------------------------------------------------------------------------------///
+    ///-----------------------------------------------------------------------------------------------------------------///
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +36,7 @@ class MarkerFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_marker, container, false)
     }
 
-    ///------------------------------------------------------------------------------------------///
+    ///-----------------------------------------------------------------------------------------------------------------///
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -99,7 +99,7 @@ class MarkerFragment : Fragment() {
         tvBird?.text = "No birds were recently spotted in this area."
     }
 
-    ///------------------------------------------------------------------------------------------///
+    ///-----------------------------------------------------------------------------------------------------------------///
 
     companion object {
         fun newInstance(placeName: String, markerCoordinates: LatLng, emulatorCoordinates: LatLng, matchingBirds: List<ToolBox.TestBird>): MarkerFragment {
@@ -125,5 +125,6 @@ class MarkerFragment : Fragment() {
         }
     }
 
-    ///------------------------------------------------------------------------------------------///
+    ///-----------------------------------------------------------------------------------------------------------------///
 }
+//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
