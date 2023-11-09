@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "347900508080",
+    "project_id": "opsc7312wingedwitness",
+    "storage_bucket": "opsc7312wingedwitness.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347900508080:android:9fbbb47c9fb4c61017c875",
+        "android_client_info": {
+          "package_name": "com.example.opsc7312_wingedwitness"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWOkMM0zVCHkMEjG2Rxp6nZuRx4jqn8X8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
