@@ -25,6 +25,29 @@ class DBHandler {
             }
     }
 
+    // Function to search all documents for a specific userUID
+    public fun getUserDataByUserUID(userUID: String, callback: (UserData?) -> Unit) {
+        // Query the 'users' collection for documents where 'userId' field matches the userUID
+        db.collection("users").whereEqualTo("userUID", userUID)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    // Assuming 'userId' is unique, there should only be one matching document
+                    val documentSnapshot = querySnapshot.documents[0]
+                    val userData = documentSnapshot.toObject(UserData::class.java)
+                    callback(userData)
+                } else {
+                    // No matching document found
+                    callback(null)
+                }
+            }
+            .addOnFailureListener { exception ->
+                // Handle any errors, such as network issues
+                callback(null)
+            }
+    }
+
+
     // Register a new user
     fun registerUser(email: String, password: String, callback: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)

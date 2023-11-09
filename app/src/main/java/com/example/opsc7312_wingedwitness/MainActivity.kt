@@ -111,38 +111,36 @@ class MainActivity : AppCompatActivity() {
                     runOnUiThread {
                         if (isSuccess) {
                             //get corresponding ID from firebase
-                            var userData = UserData()
-                            userData.userId = result?.get(0)?.toInt()!!
+                            val userUID = result.toString()
                             //get data with ID
+                            DBHandler.getUserDataByUserUID(userUID) { userData ->
+                                runOnUiThread {
+                                    if (userData != null) {
+                                        var internalUserData = UserData()
+                                        internalUserData.userId = userUID
+                                        internalUserData.userEmail = userData.userEmail
+                                        internalUserData.metricOrImperial = userData.metricOrImperial
+                                        internalUserData.lat = userData.lat
+                                        internalUserData.lng = userData.lng
+                                    } else {
+                                        // No user with the provided email and password was found
+                                        errorLabel.visibility = View.VISIBLE
+                                        loginEmail.text = ""
+                                        loginPassword.text = ""
+                                    }
+                                }
+                            }
 
                             val intent = Intent(this, HomePageActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
                         } else {
-                            // result contains the error message
-                            // Handle error, update UI, show message, etc.
+                            // No user with the provided email and password was found
+                            errorLabel.visibility = View.VISIBLE
+                            loginEmail.text = ""
+                            loginPassword.text = ""
                         }
                     }
-                }
-                val user = GlobalDataClass.UserDataList.find { it.userEmail == email
-                        && it.userPassword == password }
-                if (user != null) {
-                    var userData = UserData()
-                    userData.userId = user.userId
-                    userData.userEmail = user.userEmail
-                    userData.userPassword = user.userPassword
-                    userData.metricOrImperial = user.metricOrImperial
-                    userData.lat = user.lat
-                    userData.lng = user.lng
-                    val intent = Intent(this, HomePageActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-
-                } else {
-                    // No user with the provided email and password was found
-                    errorLabel.visibility = View.VISIBLE
-                    loginEmail.text = ""
-                    loginPassword.text = ""
                 }
             }
             else{
@@ -154,9 +152,9 @@ class MainActivity : AppCompatActivity() {
                     val userData = UserData()
                     val userId = getLowestInt()
                     if(userId == null){
-                        userData.userId = 0
+                        userData.userId = ""
                         userData.userEmail = email.text.toString()
-                        userData.userPassword = password.text.toString()
+                        //userData.userPassword = password.text.toString()
                         userData.metricOrImperial = 'M'.toString()
                         GlobalDataClass.UserDataList.add(userData)
                         Toast.makeText(this, "SignUp Successful!", Toast.LENGTH_SHORT).show()
@@ -167,7 +165,7 @@ class MainActivity : AppCompatActivity() {
                     else if (userId != null){
                         userData.userId = userId.userId
                         userData.userEmail = email.text.toString()
-                        userData.userPassword = password.text.toString()
+                       // userData.userPassword = password.text.toString()
                         userData.metricOrImperial = 'M'.toString()
                         GlobalDataClass.UserDataList.add(userData)
                         Toast.makeText(this, "SignUp Successful!", Toast.LENGTH_SHORT).show()
