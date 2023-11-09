@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         var email = findViewById<EditText>(R.id.SignUpEmailtxt)
         var password = findViewById<EditText>(R.id.SignUpPasswordtxt)
         var confPassword = findViewById<EditText>(R.id.SignUpconfirmtxt)
+        //looking for user in firebase auth db
+        val DBHandler = DBHandler()
 
         // Initialize login views
         loginViews = listOf(
@@ -104,8 +106,7 @@ class MainActivity : AppCompatActivity() {
             if(buttonLogin.text=="LogIn"){
                 val email = findViewById<EditText>(R.id.LoginEmailtxt).text.toString()
                 val password = findViewById<EditText>(R.id.LoginPasswordtxt).text.toString()
-                //looking for user in firebase auth db
-                val DBHandler = DBHandler()
+
 
                 DBHandler.signInUser(email, password) { isSuccess, result ->
                     runOnUiThread {
@@ -144,40 +145,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             else{
-
-                if (dataValidation.validateSingUpInput(email.text.toString(),password.text.toString(),confPassword.text.toString())) {
-
-                    // Input is valid, create UserData object
-                    errorLabel.visibility = View.INVISIBLE
-                    val userData = UserData()
-                    val userId = getLowestInt()
-                    if(userId == null){
-                        userData.userId = ""
-                        userData.userEmail = email.text.toString()
-                        //userData.userPassword = password.text.toString()
-                        userData.metricOrImperial = 'M'.toString()
-                        GlobalDataClass.UserDataList.add(userData)
-                        Toast.makeText(this, "SignUp Successful!", Toast.LENGTH_SHORT).show()
-                        showViews(loginViews)
-                        hideViews(signUpViews)
-                        buttonLogin.text = "LogIn"
+                val dbHandler = DBHandler()
+                dbHandler.signUpUser(email.text.toString(), password.text.toString(), "0.0", "0.0", "metric") { success, result ->
+                    if (success) {
+                        val userUID = result // result contains the new user's UID
+                    } else {
+                        val errorMessage = result // result contains the error message
                     }
-                    else if (userId != null){
-                        userData.userId = userId.userId
-                        userData.userEmail = email.text.toString()
-                       // userData.userPassword = password.text.toString()
-                        userData.metricOrImperial = 'M'.toString()
-                        GlobalDataClass.UserDataList.add(userData)
-                        Toast.makeText(this, "SignUp Successful!", Toast.LENGTH_SHORT).show()
-                        showViews(loginViews)
-                        hideViews(signUpViews)
-                        buttonLogin.text = "LogIn"
-                    }
-                }
-                else {
-                    // Handle invalid input (e.g., display an error message)
-                    errorLabel.visibility = View.VISIBLE
-                    Toast.makeText(this, "Error password must be at least 6 characters long and email must be valid", Toast.LENGTH_SHORT).show()
                 }
             }
         }

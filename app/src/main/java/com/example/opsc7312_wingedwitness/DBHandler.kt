@@ -48,17 +48,39 @@ class DBHandler {
     }
 
 
-    // Register a new user
-    fun registerUser(email: String, password: String, callback: (Boolean, String?) -> Unit) {
+    fun signUpUser(email: String, password: String, lat: String, lng: String, metricOrImperial: String, callback: (Boolean, String) -> Unit) {
+        // First, create the user account with email and password
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success
-                    val user = auth.currentUser
-                    callback(true, user?.uid)
+                    // Account creation successful, now get the user UID
+                    val userUID = auth.currentUser?.uid
+                    if (userUID != null) {
+                        // Now store additional user details in Firestore
+                        val userMap = mapOf(
+                            "userUID" to userUID,
+                            "userEmail" to email,
+                            "lat" to lat,
+                            "lng" to lng,
+                            "metricOrImperial" to metricOrImperial
+                        )
+                        db.collection("users").document(userUID)
+                            .set(userMap)
+                            .addOnSuccessListener {
+                                // User data successfully written to Firestore
+                                callback(true, userUID)
+                            }
+                            .addOnFailureListener { e ->
+                                // Failed to write user data to Firestore
+                                callback(false, "Failed to store user data: ${e.localizedMessage}")
+                            }
+                    } else {
+                        // User UID is null, which shouldn't happen
+                        callback(false, "Error: User UID is null after signup")
+                    }
                 } else {
-                    // If sign in fails, display a message to the user.
-                    callback(false, task.exception?.message)
+                    // Account creation failed
+                    callback(false, "Signup failed: ${task.exception?.localizedMessage}")
                 }
             }
     }
