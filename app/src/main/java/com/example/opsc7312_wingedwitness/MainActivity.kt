@@ -15,6 +15,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 //import com.mapbox.android.gestures.Utils
 import kotlin.concurrent.thread
 
@@ -41,7 +43,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //initializing firebase firestore
+        Firebase.initialize(this)
         //FindViews
         loginEmail = findViewById(R.id.LoginEmailtxt)
         loginPassword = findViewById(R.id.LoginPasswordtxt)
@@ -101,6 +104,26 @@ class MainActivity : AppCompatActivity() {
             if(buttonLogin.text=="LogIn"){
                 val email = findViewById<EditText>(R.id.LoginEmailtxt).text.toString()
                 val password = findViewById<EditText>(R.id.LoginPasswordtxt).text.toString()
+                //looking for user in firebase auth db
+                val DBHandler = DBHandler()
+
+                DBHandler.signInUser(email, password) { isSuccess, result ->
+                    runOnUiThread {
+                        if (isSuccess) {
+                            //get corresponding ID from firebase
+                            var userData = UserData()
+                            userData.userId = result?.get(0)?.toInt()!!
+                            //get data with ID
+
+                            val intent = Intent(this, HomePageActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        } else {
+                            // result contains the error message
+                            // Handle error, update UI, show message, etc.
+                        }
+                    }
+                }
                 val user = GlobalDataClass.UserDataList.find { it.userEmail == email
                         && it.userPassword == password }
                 if (user != null) {
