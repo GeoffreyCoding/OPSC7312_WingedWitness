@@ -77,6 +77,14 @@
                 android:backgroundTint="#ECECEC"
                 android:src="@drawable/baseline_share_location_24" />
 
+            <ImageButton
+                android:id="@+id/addBird"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="top|right"
+                android:backgroundTint="#ECECEC"
+                android:src="@drawable/fragment_add" />
+
         </FrameLayout>
     </androidx.cardview.widget.CardView>
 

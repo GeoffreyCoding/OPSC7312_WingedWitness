@@ -6,6 +6,7 @@ Gabriel Grobbelaar - ST10082002
 Liam Colbert - ST10081986
 -----------------------------------------------*/
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,11 +15,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import com.google.android.gms.maps.model.LatLng
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MarkerFragment : Fragment() {
 
+    private val selectedSpeciesList = mutableListOf<String>()
+    private val markerCoordinates = arguments?.getParcelable<LatLng>("markerCoordinates")
 
     ///-----------------------------------------------------------------------------------------------------------------///
 
@@ -44,7 +52,7 @@ class MarkerFragment : Fragment() {
         val userSightedBirds = arguments?.getSerializable("userSightedBirds") as List<SightingData>?
         val matchingBirds = arguments?.getSerializable("matchingBirds") as List<ToolBox.TestBird>?
         val placeName = arguments?.getString("placeName")
-        val markerCoordinates = arguments?.getParcelable<LatLng>("markerCoordinates")
+
         val emulatorCoordinates = arguments?.getParcelable<LatLng>("emulatorCoordinates")
         val btnClose = view.findViewById<ImageButton>(R.id.btn_close)
         // Find the LinearLayout where you want to add the CardViews
@@ -79,6 +87,7 @@ class MarkerFragment : Fragment() {
         }
 
         val tvBird = view.findViewById<TextView>(R.id.tv_bird)
+        val addBird = view.findViewById<ImageButton>(R.id.addBird)
 
         if (matchingBirds != null && matchingBirds.isNotEmpty()) {
             // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
@@ -87,6 +96,11 @@ class MarkerFragment : Fragment() {
                     "Bird Date: ${it.obsDt}\n" +
                     "Bird Count: ${it.howMany}\n"}
             tvBird.text = birdNames
+
+            addBird.setOnClickListener {
+                fetchBirdSpeciesAndShowDialog(matchingBirds)
+            }
+
             // Set the text of the TextView to the bird names
         }else if (GlobalDataClass.SightingDataList != null && GlobalDataClass.SightingDataList.isNotEmpty()) {
             updateUserSightedBirdsData()}
@@ -115,6 +129,42 @@ class MarkerFragment : Fragment() {
         } else {
             setNoBirdsMessage()
         }
+    }
+
+    private fun showSpeciesDialog(matchingBirds: List<ToolBox.TestBird>) {
+        val birdNames = matchingBirds.map { it.comName }.toTypedArray()
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val currentDate = sdf.format(Date())
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Choose Bird Species")
+            .setSingleChoiceItems(birdNames, -1) { dialogInterface, which ->
+                val selectedSpecies = matchingBirds[which].comName
+                addSelectedSpeciesToList(selectedSpecies)
+
+                var sightingData = SightingData()
+                sightingData.sightingId = 0
+                sightingData.userId = 0
+                sightingData.sightingCount = matchingBirds[which].howMany
+                sightingData.sightingLocation = matchingBirds[which].locName
+                sightingData.sightingDate = currentDate
+                sightingData.sightingName = matchingBirds[which].comName
+                sightingData.sightingSpecies = matchingBirds[which].sciName
+                sightingData.sightingLat = matchingBirds[which].lat.toDouble()
+                sightingData.sightingLng = matchingBirds[which].lng.toDouble()
+                GlobalDataClass.SightingDataList.add(sightingData)
+                dialogInterface.dismiss()
+            }
+        builder.show()
+    }
+
+    private fun addSelectedSpeciesToList(selectedBird: String) {
+        selectedSpeciesList.add(selectedBird)
+        // You can perform other actions based on the selected species if needed
+    }
+
+    // Call this function when you want to show the species dialog
+    private fun fetchBirdSpeciesAndShowDialog(matchingBirds: List<ToolBox.TestBird>) {
+        showSpeciesDialog(matchingBirds)
     }
 
     ///-----------------------------------------------------------------------------------------------------------------///
