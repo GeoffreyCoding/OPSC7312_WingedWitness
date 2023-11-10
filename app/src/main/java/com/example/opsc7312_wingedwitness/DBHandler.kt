@@ -48,7 +48,7 @@ class DBHandler {
     }
 
 
-    fun signUpUser(email: String, password: String, lat: String, lng: String, metricOrImperial: String, callback: (Boolean, String) -> Unit) {
+    fun signUpUser(email: String, password: String, metricOrImperial: String, callback: (Boolean, String) -> Unit) {
         // First, create the user account with email and password
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -60,8 +60,6 @@ class DBHandler {
                         val userMap = mapOf(
                             "userUID" to userUID,
                             "userEmail" to email,
-                            "lat" to lat,
-                            "lng" to lng,
                             "metricOrImperial" to metricOrImperial
                         )
                         db.collection("users").document(userUID)
@@ -81,6 +79,22 @@ class DBHandler {
                 } else {
                     // Account creation failed
                     callback(false, "Signup failed: ${task.exception?.localizedMessage}")
+                }
+            }
+
+    }
+
+    //Update current users metricToImerial
+    fun updateMetricToImperial(userUID: String, newMetricToImperial: String){
+// Query the 'users' collection for documents where 'userUID' field matches the userUID
+        db.collection("users").whereEqualTo("userUID", userUID)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    // Assuming 'userUID' is unique, there should only be one matching document
+                    val documentSnapshot = querySnapshot.documents.first()
+                    // Update the document
+                    documentSnapshot.reference.update("metricOrImperial", newMetricToImperial)
                 }
             }
     }

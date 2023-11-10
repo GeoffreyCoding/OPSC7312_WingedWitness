@@ -104,9 +104,26 @@ class MainActivity : AppCompatActivity() {
         //Login
         buttonLogin.setOnClickListener {
             if(buttonLogin.text=="LogIn"){
+                errorLabel.visibility = View.INVISIBLE
                 val email = findViewById<EditText>(R.id.LoginEmailtxt).text.toString()
                 val password = findViewById<EditText>(R.id.LoginPasswordtxt).text.toString()
 
+                val dataValidation = dataValidation()
+
+                if(email.isEmpty() || password.isEmpty()){
+                    errorLabel.text = "Empty fields are not allowed"
+                    errorLabel.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
+
+                val validationResult = dataValidation.validateEmail(email)
+                if(validationResult != "true"){
+                    errorLabel.visibility = View.VISIBLE
+                    loginEmail.text = ""
+                    loginPassword.text = ""
+                    errorLabel.text = "Incorrect email or password!"
+                    return@setOnClickListener
+                }
 
                 DBHandler.signInUser(email, password) { isSuccess, result ->
                     runOnUiThread {
@@ -117,17 +134,17 @@ class MainActivity : AppCompatActivity() {
                             DBHandler.getUserDataByUserUID(userUID) { userData ->
                                 runOnUiThread {
                                     if (userData != null) {
+                                        GlobalDataClass.UserDataList.clear()
+
                                         var internalUserData = UserData()
                                         internalUserData.userId = userUID
                                         internalUserData.userEmail = userData.userEmail
                                         internalUserData.metricOrImperial = userData.metricOrImperial
-                                        internalUserData.lat = userData.lat
-                                        internalUserData.lng = userData.lng
+
+                                        GlobalDataClass.UserDataList.add(internalUserData)
+                                        GlobalDataClass.imperialOrMetric = userData.metricOrImperial
                                     } else {
-                                        // No user with the provided email and password was found
-                                        errorLabel.visibility = View.VISIBLE
-                                        loginEmail.text = ""
-                                        loginPassword.text = ""
+
                                     }
                                 }
                             }
@@ -140,13 +157,23 @@ class MainActivity : AppCompatActivity() {
                             errorLabel.visibility = View.VISIBLE
                             loginEmail.text = ""
                             loginPassword.text = ""
+                            errorLabel.text = "Incorrect email or password!"
                         }
                     }
                 }
             }
             else{
+                val userEmail = email.text.toString()
+                val userPwd = password.text.toString()
+                val userConfPwd = confPassword.text.toString()
+                val validateResult = dataValidation.validateSingUpInput(userEmail,userPwd,userConfPwd)
+                if(validateResult != "true"){
+                    errorLabel.text = validateResult
+                    errorLabel.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
                 val dbHandler = DBHandler()
-                dbHandler.signUpUser(email.text.toString(), password.text.toString(), "0.0", "0.0", "metric") { success, result ->
+                dbHandler.signUpUser(email.text.toString(), password.text.toString(),  "metric") { success, result ->
                     if (success) {
                         val userUID = result // result contains the new user's UID
                     } else {

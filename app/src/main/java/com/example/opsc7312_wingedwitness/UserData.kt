@@ -12,6 +12,4 @@ class UserData {
     var userId: String =""
     var userEmail: String=""
     var metricOrImperial: String="metric"
-    var lat: String = "0.0"
-    var lng: String = "0.0"
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
