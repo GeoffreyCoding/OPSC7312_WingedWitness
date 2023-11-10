@@ -134,11 +134,13 @@ class MainActivity : AppCompatActivity() {
                             DBHandler.getUserDataByUserUID(userUID) { userData ->
                                 runOnUiThread {
                                     if (userData != null) {
+                                        GlobalDataClass.UserDataList.clear()
+
                                         var internalUserData = UserData()
                                         internalUserData.userId = userUID
                                         internalUserData.userEmail = userData.userEmail
                                         internalUserData.metricOrImperial = userData.metricOrImperial
-                                        GlobalDataClass.UserDataList.clear()
+
                                         GlobalDataClass.UserDataList.add(internalUserData)
                                         GlobalDataClass.imperialOrMetric = userData.metricOrImperial
                                     } else {

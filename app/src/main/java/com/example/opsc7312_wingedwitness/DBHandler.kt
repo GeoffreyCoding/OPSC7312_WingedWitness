@@ -81,6 +81,22 @@ class DBHandler {
                     callback(false, "Signup failed: ${task.exception?.localizedMessage}")
                 }
             }
+
+    }
+
+    //Update current users metricToImerial
+    fun updateMetricToImperial(userUID: String, newMetricToImperial: String){
+// Query the 'users' collection for documents where 'userUID' field matches the userUID
+        db.collection("users").whereEqualTo("userUID", userUID)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    // Assuming 'userUID' is unique, there should only be one matching document
+                    val documentSnapshot = querySnapshot.documents.first()
+                    // Update the document
+                    documentSnapshot.reference.update("metricOrImperial", newMetricToImperial)
+                }
+            }
     }
 
     //add bird to db
