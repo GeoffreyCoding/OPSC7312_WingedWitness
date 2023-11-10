@@ -114,6 +114,14 @@ class MarkerFragment : Fragment() {
 
         if ((matchingBirds != null) && matchingBirds.isNotEmpty()) {
             // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
+            val userBirdNames = GlobalDataClass.SightingDataList.joinToString("\n") {
+                "Sighted Bird:\n" +
+                        "Bird Name: ${it.sightingName}\n" +
+                        "Date: ${it.sightingDate}\n" +
+                        "Location: ${it.sightingLocation}\n"}
+
+            tvUserBird.text = userBirdNames
+
             val birdNames = matchingBirds.joinToString("\n") {
                 "Bird Name: ${it.comName}\n" +
                         "Bird Species: ${it.sciName}\n" +
@@ -121,6 +129,7 @@ class MarkerFragment : Fragment() {
                         "Bird Count: ${it.howMany}\n"
             }
             tvBird.text = birdNames
+
 
         } else if (GlobalDataClass.SightingDataList != null && GlobalDataClass.SightingDataList.isNotEmpty()) {
             updateUserSightedBirdsData()
@@ -300,7 +309,7 @@ class MarkerFragment : Fragment() {
             placeName: String,
             markerCoordinates: LatLng,
             emulatorCoordinates: LatLng,
-            matchingBirds: List<ToolBox.TestBird>
+            matchingBirds: List<ToolBox.TestBird>,
         ): MarkerFragment {
             val fragment = MarkerFragment()
             val args = Bundle()
@@ -308,6 +317,7 @@ class MarkerFragment : Fragment() {
             args.putParcelable("markerCoordinates", markerCoordinates)
             args.putParcelable("emulatorCoordinates", emulatorCoordinates)
             args.putSerializable("matchingBirds", ArrayList(matchingBirds))
+            args.putSerializable("userSightedBirds", ArrayList(GlobalDataClass.SightingDataList))
             println(markerCoordinates.toString())
             fragment.arguments = args
             return fragment
@@ -337,7 +347,6 @@ class MarkerFragment : Fragment() {
             args.putString("placeName", placeName)
             args.putParcelable("markerCoordinates", markerCoordinates)
             args.putParcelable("emulatorCoordinates", emulatorCoordinates)
-            // Pass the user-sighted bird data to the fragment
             args.putSerializable("userSightedBirds", ArrayList(GlobalDataClass.SightingDataList))
             fragment.arguments = args
             return fragment
