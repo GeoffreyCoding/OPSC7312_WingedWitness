@@ -48,7 +48,7 @@ class DBHandler {
     }
 
 
-    fun signUpUser(email: String, password: String, lat: String, lng: String, metricOrImperial: String, callback: (Boolean, String) -> Unit) {
+    fun signUpUser(email: String, password: String, metricOrImperial: String, callback: (Boolean, String) -> Unit) {
         // First, create the user account with email and password
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -60,8 +60,6 @@ class DBHandler {
                         val userMap = mapOf(
                             "userUID" to userUID,
                             "userEmail" to email,
-                            "lat" to lat,
-                            "lng" to lng,
                             "metricOrImperial" to metricOrImperial
                         )
                         db.collection("users").document(userUID)
