@@ -31,6 +31,8 @@ class BirdSpeciesFragment : DialogFragment() {
         return builder.create()
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Method to fetch and show the species
     private fun fetchSpeciesAndShowDialog(builder: AlertDialog.Builder) {
         CoroutineScope(Dispatchers.IO).launch {
             val tempSpeciesList = getSpeciesListForWesternCape()
@@ -41,6 +43,8 @@ class BirdSpeciesFragment : DialogFragment() {
         }
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Method to build and show the species
     private fun buildAndShowSpeciesDialog(builder: AlertDialog.Builder, species: Array<String>) {
         builder.setTitle("Choose Bird Species")
             .setSingleChoiceItems(species, -1) { dialogInterface, which ->

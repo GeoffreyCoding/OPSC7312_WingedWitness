@@ -50,6 +50,7 @@ private lateinit var ivCameraBtn: ImageView
 private lateinit var back: ImageView
 private lateinit var btnSpecies:Button
 private lateinit var userLocation: Location
+
 //Audio
 private var mediaRecorder: MediaRecorder? = null
 private var isRecording = false
@@ -84,11 +85,7 @@ class AddSightingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addsighting)
         var dataValidation = dataValidation()
-
         val DBHandler = DBHandler()
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
 
         //FindViews
         edtSightingName = findViewById(R.id.edtSightingName)
@@ -101,8 +98,9 @@ class AddSightingActivity : AppCompatActivity() {
         ivRecordBird = findViewById(R.id.ivRecordSghting)
         back = findViewById(R.id.Back)
         btnSpecies = findViewById(R.id.btnSpecies)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
+        //-------------------------------------------------------------------------------------------------------------//
         //Add the Species
         btnSpecies.setOnClickListener {
             showBirdSpeciesDialog()
@@ -129,12 +127,14 @@ class AddSightingActivity : AppCompatActivity() {
         //-------------------------------------------------------------------------------------------------------------//
         //button click listener to start the validation and the adding of the data to the object
         ivCameraBtn.setOnClickListener {
+
             // Check for camera permission
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.CAMERA
                 ) == PackageManager.PERMISSION_GRANTED
-            ) {
+            )
+            {
                 // Camera permission is granted, open the camera
                 openCamera()
             } else {
@@ -332,7 +332,6 @@ class AddSightingActivity : AppCompatActivity() {
 
     //-------------------------------------------------------------------------------------------------------------//
     //Get Current Location
-
     private fun requestLocation() {
         if(checkLocationPermission()) {
             Log.d("Location", "requestLocation called")

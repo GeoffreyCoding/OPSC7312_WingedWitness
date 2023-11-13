@@ -5,14 +5,13 @@ Geoffrey Huth - ST10081932
 Gabriel Grobbelaar - ST10082002
 Liam Colbert - ST10081986
 -----------------------------------------------*/
-// Imports
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.app.Activity
 import android.widget.Toast
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import java.lang.ref.WeakReference
-
-    //-----------------------------------------------------------------------------------------------------------------//
 
 class LocationPermissionHelper(val activity: WeakReference<Activity>) {
 
@@ -47,7 +46,6 @@ class LocationPermissionHelper(val activity: WeakReference<Activity>) {
 
     //-----------------------------------------------------------------------------------------------------------------//
     // Adding the decided choice to an array
-
     fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,

@@ -14,6 +14,9 @@ import java.util.Date
 //---------------------------------------------------------------------------------------------------------------------//
 
 class SightingData(
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Declarations
     var sightingId: Int = 0,
     var userId: String = "",
     var sightingName: String = "",
@@ -27,6 +30,8 @@ class SightingData(
     var sightingLng: Double = 0.0
 ) : Parcelable {
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //constructor
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readString()?:"",
@@ -41,10 +46,14 @@ class SightingData(
         parcel.readDouble()
     )
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Describe Contents
     override fun describeContents(): Int {
         return 0
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Write
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeInt(sightingId)
         dest.writeString(userId)
@@ -59,11 +68,14 @@ class SightingData(
         dest.writeDouble(sightingLng)
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Companion Object
     companion object CREATOR : Parcelable.Creator<SightingData> {
         override fun createFromParcel(parcel: Parcel): SightingData {
             return SightingData(parcel)
         }
 
+        //The Array
         override fun newArray(size: Int): Array<SightingData?> {
             return arrayOfNulls(size)
         }

@@ -5,6 +5,8 @@ Geoffrey Huth - ST10081932
 Gabriel Grobbelaar - ST10082002
 Liam Colbert - ST10081986
 -----------------------------------------------*/
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
@@ -23,20 +25,24 @@ import kotlin.collections.ArrayList
 
 
 class MarkerFragment : Fragment() {
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Declarations
     private lateinit var myUser: String
     private val DBHandler = DBHandler()
     private val selectedSpeciesList = mutableListOf<String>()
     private val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private val currentDate = sdf.format(Date())
-
     ///-----------------------------------------------------------------------------------------------------------------///
 
     private fun dismissFragment() {
         fragmentManager?.beginTransaction()?.remove(this)?.commit()
     }
-
     ///-----------------------------------------------------------------------------------------------------------------///
 
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //On create View
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,11 +51,12 @@ class MarkerFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_marker, container, false)
     }
 
-    ///-----------------------------------------------------------------------------------------------------------------///
-
+    //-----------------------------------------------------------------------------------------------------------------//
+    //On View Created
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Declarations
         val markerCoordinates = arguments?.getParcelable<LatLng>("markerCoordinates")
         val matchingBirds = arguments?.getSerializable("matchingBirds") as List<ToolBox.TestBird>?
         val userSightedBirds = arguments?.getSerializable("userSightedBirds") as List<SightingData>?
@@ -76,7 +83,7 @@ class MarkerFragment : Fragment() {
 
         val btnNavigate = view.findViewById<ImageButton>(R.id.btn_navigation)
         btnNavigate.setOnClickListener {
-            // Handle button click here
+
 
             // Create an Intent to start the new activity
             val intent = Intent(requireContext(), Navigation::class.java)
@@ -97,6 +104,8 @@ class MarkerFragment : Fragment() {
             startActivity(intent)
         }
 
+        //-----------------------------------------------------------------------------------------------------------------//
+        //Add Bird Listener
         addBird.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext()).apply {
                 setTitle("Add Bird")
@@ -168,7 +177,7 @@ class MarkerFragment : Fragment() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    ///Method to update iser sighted birds data
     private fun updateUserSightedBirdsData(placeName: String?, markerCoordinates: LatLng?) {
         val tvUserBird = view?.findViewById<TextView>(R.id.tv_userBird)
 
@@ -194,7 +203,7 @@ class MarkerFragment : Fragment() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    ///Method to show the species dialog
     private fun showSpeciesDialog(matchingBirds: List<ToolBox.TestBird>) {
         val birdNames = matchingBirds.map { it.comName }.toTypedArray()
 
@@ -221,7 +230,7 @@ class MarkerFragment : Fragment() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    /// Method to add the selected species to a list
     private fun addSelectedSpeciesToList(selectedBird: String) {
         selectedSpeciesList.add(selectedBird)
     }
@@ -233,7 +242,7 @@ class MarkerFragment : Fragment() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    ///Method to add to the hotspot dialog
     private fun showAddToHotspotDialog(user: TextView, place: String, lat: Float, lng: Float) {
         val builder = AlertDialog.Builder(requireContext()).apply {
             setTitle("Add to Hotspot")
@@ -260,7 +269,7 @@ class MarkerFragment : Fragment() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    //Create the edit text
     private fun createEditText(hint: String): EditText {
         val et = EditText(requireContext()).apply {
             this.hint = hint
@@ -270,7 +279,7 @@ class MarkerFragment : Fragment() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    ///Create the amount edit text
     private fun createAmountEditText(hint: String): EditText {
         return createEditText(hint).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
@@ -278,7 +287,7 @@ class MarkerFragment : Fragment() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    ///Create the Linear layout
     private fun createLinearLayout(vararg views: View): LinearLayout {
         val layout = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
@@ -289,7 +298,7 @@ class MarkerFragment : Fragment() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    ///Create the layout params
     private fun createLayoutParams(): LinearLayout.LayoutParams {
         return LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -300,7 +309,7 @@ class MarkerFragment : Fragment() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    ///Method to handle the logic
     private fun handleAddToHotspot(
         etBirdName: EditText, etSpecies: EditText, etAmount: EditText,
         user: TextView, place: String, lat: Float, lng: Float) {
@@ -308,6 +317,7 @@ class MarkerFragment : Fragment() {
             myUser = user.userId
         }
 
+        //Declarations
         val birdName = etBirdName.text.toString()
         val species = etSpecies.text.toString()
         val amount = etAmount.text.toString().toIntOrNull()
@@ -379,7 +389,7 @@ class MarkerFragment : Fragment() {
         }
 
         ///--------------------------------------------------------------------------------------///
-
+        ///If there is a new instance
         fun newInstanceWithoutBirds(placeName: String, markerCoordinates: LatLng,
                                     emulatorCoordinates: LatLng, ): MarkerFragment {
             val fragment = MarkerFragment()
@@ -392,7 +402,7 @@ class MarkerFragment : Fragment() {
         }
 
         ///--------------------------------------------------------------------------------------///
-
+        ///If there is a new instance
         fun newInstanceForUserSightedBirds(placeName: String, markerCoordinates: LatLng,
             emulatorCoordinates: LatLng): MarkerFragment {
             val fragment = MarkerFragment()

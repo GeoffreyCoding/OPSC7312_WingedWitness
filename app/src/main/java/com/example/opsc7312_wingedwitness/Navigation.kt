@@ -5,6 +5,8 @@ Geoffrey Huth - ST10081932
 Gabriel Grobbelaar - ST10082002
 Liam Colbert - ST10081986
 -----------------------------------------------*/
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
@@ -73,10 +75,13 @@ import kotlin.properties.Delegates
 
 class Navigation : AppCompatActivity() {
 
+    //Companion Object
     private companion object {
         private const val BUTTON_ANIMATION_DURATION = 1500L
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Declarations from MapBox
     /**
      * Debug tool used to play, pause and seek route progress events that can be used to produce mocked location updates along the route.
      */
@@ -109,7 +114,7 @@ class Navigation : AppCompatActivity() {
     private lateinit var viewportDataSource: MapboxNavigationViewportDataSource
 
     /*
-    * Below are generated camera padding values to ensure that the route fits well on screen while
+    * Generated camera padding values to ensure that the route fits well on screen while
     * other elements are overlaid on top of the map (including instruction view, buttons, etc.)
     */
     private val pixelDensity = Resources.getSystem().displayMetrics.density
@@ -268,6 +273,8 @@ class Navigation : AppCompatActivity() {
             // not handled
         }
 
+        //-----------------------------------------------------------------------------------------------------------------//
+        //Updated the views/details on the map
         override fun onNewLocationMatcherResult(locationMatcherResult: LocationMatcherResult) {
             val enhancedLocation = locationMatcherResult.enhancedLocation
             // update location puck's position on the map
@@ -372,6 +379,8 @@ class Navigation : AppCompatActivity() {
         }
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //MapBox Nav
     private val mapboxNavigation: MapboxNavigation by requireMapboxNavigation(
         onResumedObserver = object : MapboxNavigationObserver {
             @SuppressLint("MissingPermission")
@@ -397,6 +406,8 @@ class Navigation : AppCompatActivity() {
         onInitialize = this::initNavigation
     )
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //On Create Method
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -488,10 +499,6 @@ class Navigation : AppCompatActivity() {
                     .build()
             )
         }
-        // make sure to use the same DistanceFormatterOptions across different features
-
-
-
 
         // initialize voice instructions api and the voice instruction player
         speechApi = MapboxSpeechApi(
@@ -506,10 +513,7 @@ class Navigation : AppCompatActivity() {
             Locale.ENGLISH.language
         )
 
-        // initialize route line, the withRouteLineBelowLayerId is specified to place
-        // the route line below road labels layer on the map
-        // the value of this option will depend on the style that you are using
-        // and under which layer the route line should be placed on the map layers stack
+        //Route Lines
         val mapboxRouteLineOptions = MapboxRouteLineOptions.Builder(this)
             .withRouteLineBelowLayerId("road-label-navigation")
             .build()
@@ -560,6 +564,8 @@ class Navigation : AppCompatActivity() {
         binding.soundButton.unmute()
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //On Destroy Method
     override fun onDestroy() {
         super.onDestroy()
 
@@ -571,10 +577,13 @@ class Navigation : AppCompatActivity() {
         voiceInstructionsPlayer.shutdown()
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Nav
     private fun initNavigation() {
         MapboxNavigationApp.setup(
             NavigationOptions.Builder(this)
                 .accessToken(getString(R.string.mapbox_access_token))
+
                 // comment out the location engine setting block to disable simulation
                 //.locationEngine(replayLocationEngine)
                 .build()
@@ -596,6 +605,8 @@ class Navigation : AppCompatActivity() {
         replayOriginLocation()
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Replayer Method
     private fun replayOriginLocation() {
         var emulatitude = intent.getDoubleExtra("emulatitude", 0.0)
         var emulongitude = intent.getDoubleExtra("emulongitude", 0.0)
@@ -613,6 +624,8 @@ class Navigation : AppCompatActivity() {
         mapboxReplayer.playbackSpeed(3.0)
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Find Route Method
     private fun findRoute(destination: Point) {
         val userData = UserData()
 
@@ -623,11 +636,7 @@ class Navigation : AppCompatActivity() {
         val originPoint = originLocation?.let {
             Point.fromLngLat(emulongitude, emulatitude) } ?: return
 
-        // execute a route request
-        // it's recommended to use the
-        // applyDefaultNavigationOptions and applyLanguageAndVoiceUnitOptions
-        // that make sure the route request is optimized
-        // to allow for support of all of the Navigation SDK features
+        //Mapbox Nav
         mapboxNavigation.requestRoutes(
             RouteOptions.builder()
                 .applyDefaultNavigationOptions()
@@ -668,6 +677,8 @@ class Navigation : AppCompatActivity() {
         )
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Set Route and start nav
     private fun setRouteAndStartNavigation(routes: List<NavigationRoute>) {
         // set routes, where the first route in the list is the primary route that
         // will be used for active guidance
@@ -682,6 +693,8 @@ class Navigation : AppCompatActivity() {
         navigationCamera.requestNavigationCameraToOverview()
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Clear Route
     private fun clearRouteAndStopNavigation() {
         // clear
         mapboxNavigation.setNavigationRoutes(listOf())
@@ -695,4 +708,4 @@ class Navigation : AppCompatActivity() {
         binding.routeOverview.visibility = View.INVISIBLE
         binding.tripProgressCard.visibility = View.INVISIBLE
     }
-}
+}//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

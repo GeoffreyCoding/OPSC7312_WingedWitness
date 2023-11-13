@@ -21,7 +21,7 @@ private val LOGGING_TAG = "URLWECREATED"
 private val EBIRD_REGIONAL_URL = "https://api.ebird.org/v2/data/obs/ZA-WC/recent"
 
 ///----------------------------------------------------------------------------------------------///
-
+///Building the URL for Regional
 fun buildURLForEbirdRegional(): URL? {
     val buildUri: Uri = Uri.parse(EBIRD_REGIONAL_URL).buildUpon()
         .appendQueryParameter(
@@ -40,7 +40,7 @@ fun buildURLForEbirdRegional(): URL? {
 }
 
 ///----------------------------------------------------------------------------------------------///
-
+///Building the URL for EBird
 fun buildURLForEbird(lng: Float, lat: Float, dist: Double): URL? {
     val buildUri: Uri = Uri.parse("https://api.ebird.org/v2/ref/hotspot/geo?lat=${lng}&lng=${lat}&dist=${dist}").buildUpon()
         .appendQueryParameter(
@@ -59,7 +59,7 @@ fun buildURLForEbird(lng: Float, lat: Float, dist: Double): URL? {
 }
 
 ///----------------------------------------------------------------------------------------------///
-
+///Building the URL for Info
 fun buildURLForAllEbirdInfo(lng: Float, lat: Float): URL? {
     val buildUri: Uri = Uri.parse("https://api.ebird.org/v2/data/obs/geo/recent?lat=${lat}&lng=${lng}&sort=species&back=30&dist=0.5").buildUpon()
         .appendQueryParameter(
@@ -78,7 +78,7 @@ fun buildURLForAllEbirdInfo(lng: Float, lat: Float): URL? {
 }
 
 ///----------------------------------------------------------------------------------------------///
-
+///Building the URL for the list in WC
 fun getSpeciesListForWesternCape(): List<String> {
     val speciesList = mutableListOf<String>()
 

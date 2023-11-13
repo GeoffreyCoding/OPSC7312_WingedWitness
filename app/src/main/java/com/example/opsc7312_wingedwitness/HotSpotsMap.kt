@@ -5,6 +5,8 @@ Geoffrey Huth - ST10081932
 Gabriel Grobbelaar - ST10082002
 Liam Colbert - ST10081986
 -----------------------------------------------*/
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
@@ -48,44 +50,29 @@ import com.example.opsc7312_wingedwitness.SightingData as SightingData
 
 class HotSpotsMap : AppCompatActivity() {
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Declarations
     private var mapView: MapView? = null
     private var emulatorLatitude: Double = 0.0
     private var emulatorLongitude: Double = 0.0
-
     private var dist: Double = 2.0
-
     private var progressDialog: ProgressDialog? = null
-
     private val mapBoxHelper = HotSpotHelper()
-
     private lateinit var locationPermissionHelper: LocationPermissionHelper
-
     private var birdHotSpotList = mutableListOf<ToolBox.BirdHotspots>()
-
     private val mapAnimationOptions = MapAnimationOptions.Builder().duration(1500L).build()
-
     private lateinit var myButton: ImageButton
-
     private lateinit var userButton: ImageButton
-
     private lateinit var backButton: ImageButton
-
     private val navigationLocationProvider = NavigationLocationProvider()
 
-    private val locationObserver = object : LocationObserver {
-        /**
-         * Invoked as soon as the [Location] is available.
-         */
-        override fun onNewRawLocation(rawLocation: android.location.Location) {
-            // Not implemented in this example. However, if you want you can also
-            // use this callback to get location updates, but as the name suggests
-            // these are raw location updates which are usually noisy.
-        }
 
-        /**
-         * Provides the best possible location update, snapped to the route or
-         * map-matched to the road if possible.
-         */
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Location Observer Method
+    private val locationObserver = object : LocationObserver {
+
+        override fun onNewRawLocation(rawLocation: android.location.Location) {}
+
         override fun onNewLocationMatcherResult(locationMatcherResult: LocationMatcherResult) {
             val enhancedLocation = locationMatcherResult.enhancedLocation
             navigationLocationProvider.changePosition(
@@ -97,8 +84,12 @@ class HotSpotsMap : AppCompatActivity() {
         }
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Bindings
     private lateinit var binding: ActivityHotSpotsMapBinding
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Declarations
     private val onIndicatorBearingChangedListener = OnIndicatorBearingChangedListener {
         mapView?.getMapboxMap()?.setCamera(CameraOptions.Builder().bearing(it).build())
     }
@@ -211,7 +202,6 @@ class HotSpotsMap : AppCompatActivity() {
 
     ///------------------------------------------------------------------------------------------///
     // set-up the spinner for the hotspots within proximity
-
     private fun setupDistanceSpinner(mapboxMap: MapView) {
 
         val distance = findViewById<Spinner>(R.id.userDistance)
@@ -238,7 +228,7 @@ class HotSpotsMap : AppCompatActivity() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    /// Find birds in a specific radius
     private fun findBirdsWithinRadius(markerCoordinateslat: Double, markerCoordinatesng: Double, callback: (List<ToolBox.TestBird>) -> Unit) {
         // Make an asynchronous network request to fetch bird data
         thread {
@@ -264,7 +254,7 @@ class HotSpotsMap : AppCompatActivity() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    /// Parse the bird data
     private fun parseBirdData(birdData: String): List<ToolBox.TestBird> {
         val gson = Gson()
         val listType = object : TypeToken<List<ToolBox.TestBird>>() {}.type
@@ -273,7 +263,6 @@ class HotSpotsMap : AppCompatActivity() {
 
     ///------------------------------------------------------------------------------------------///
     // Consume the ebird api json and add to a list
-
     private fun consumeHotSpotsBirdJson(birdJSON: String?) {
         val birds = parseBirdJSON(birdJSON)
         addBirdPointAnnotation(birds)
@@ -382,7 +371,6 @@ class HotSpotsMap : AppCompatActivity() {
 
     ///------------------------------------------------------------------------------------------///
     /// Display marker fragment
-
     private fun showMarkerFragment(
         markerName: String,
         markerCoordinates: LatLng,
@@ -439,13 +427,12 @@ class HotSpotsMap : AppCompatActivity() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    ///Method for the Gestures
     private fun setupGesturesListener() {
         mapView?.gestures?.addOnMoveListener(onMoveListener)
     }
 
     ///------------------------------------------------------------------------------------------///
-
     private fun initLocationComponent() {
         val locationComponentPlugin = mapView?.location
         locationComponentPlugin?.updateSettings {

@@ -35,12 +35,14 @@ class accounts_page : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accounts_page)
         val DBHandler = DBHandler()
+
         //FindViews
         addEntry = findViewById(R.id.addEntry)
         back = findViewById(R.id.Back)
         recyclerView = findViewById(R.id.recyclerView)
         rbMetric = findViewById(R.id.radioButtonMetric)
         rbImperial = findViewById(R.id.radioButtonImperial)
+
         //Changing base setting of imperial or metric
         var imperialOrMetric = GlobalDataClass.imperialOrMetric
         val currentUserUID = GlobalDataClass.UserDataList[0].userId
@@ -51,6 +53,7 @@ class accounts_page : AppCompatActivity() {
             rbMetric.isChecked = false
             rbImperial.isChecked = true
         }
+
         //-------------------------------------------------------------------------------------------------------------//
         //Add Entry
         addEntry.setOnClickListener {

@@ -60,7 +60,9 @@ class dataValidation {
 
         return true
     }
-    //Validate email
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Validate the Email input
     fun validateEmail(email: String) : String {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         if(!email.matches(emailPattern.toRegex())){
