@@ -26,7 +26,7 @@ class DBHandler {
     }
 
     // Function to search all documents for a specific userUID
-    public fun getUserDataByUserUID(userUID: String, callback: (UserData?) -> Unit) {
+    fun getUserDataByUserUID(userUID: String, callback: (UserData?) -> Unit) {
         // Query the 'users' collection for documents where 'userId' field matches the userUID
         db.collection("users").whereEqualTo("userUID", userUID)
             .get()
@@ -99,7 +99,137 @@ class DBHandler {
             }
     }
 
-    //add bird to db
+    fun addBirdToFireBase(
+        audioFilePath: String,
+        imageFilePath: String,
+        sightingCount: Int,
+        sightingDate: String,
+        sightingId: String,
+        sightingLat: String,
+        sightingLng: String,
+        sightingLocation: String,
+        sightingName: String,
+        sightingSpecies: String,
+        userUID: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        // Create a document with a unique ID for the bird sighting
+        val birdDocument = db.collection("userBirds").document()
 
-    //get bird data from db
+        // Create a map with the bird sighting data
+        val birdMap = mapOf(
+            "audioFilePath" to audioFilePath,
+            "imageFilePath" to imageFilePath,
+            "sightingCount" to sightingCount,
+            "sightingDate" to sightingDate,
+            "sightingId" to sightingId,
+            "sightingLat" to sightingLat,
+            "sightingLng" to sightingLng,
+            "sightingLocation" to sightingLocation,
+            "sightingName" to sightingName,
+            "sightingSpecies" to sightingSpecies,
+            "userUID" to userUID
+        )
+
+        // Set the data in Firestore
+        birdDocument.set(birdMap)
+            .addOnSuccessListener {
+                // Bird data successfully written to Firestore
+                callback(true, birdDocument.id)
+            }
+            .addOnFailureListener { e ->
+                // Failed to write bird data to Firestore
+                callback(false, "Failed to store bird data: ${e.localizedMessage}")
+            }
+    }
+
+    /*fun getBirdSightingsForUser(userUID: String, callback: (List<SightingData>, String?) -> Unit) {
+
+        // Create a query to retrieve bird sightings for a specific user
+        val query = db.collection("userBirds")
+            .whereEqualTo("userUID", userUID)
+
+        // Execute the query
+        query.get()
+            .addOnSuccessListener { result ->
+                // Parse the result and convert documents to BirdSighting objects
+                val birdSightings = result.documents.map { document ->
+                    val audioFilePath = document.getString("audioFilePath") ?: ""
+                    val imageFilePath = document.getString("imageFilePath") ?: ""
+                    val sightingCount = document.getLong("sightingCount")?.toInt() ?: 0
+                    val sightingDate = document.getString("sightingDate") ?: ""
+                    val sightingId = document.getString("sightingId") ?: ""
+                    val sightingLat = document.getString("sightingLat") ?: ""
+                    val sightingLng = document.getString("sightingLng") ?: ""
+                    val sightingLocation = document.getString("sightingLocation") ?: ""
+                    val sightingName = document.getString("sightingName") ?: ""
+                    val sightingSpecies = document.getString("sightingSpecies") ?: ""
+
+
+                    SightingData(
+                        sightingId.toInt(),
+                        userUID,
+                        sightingName,
+                        sightingSpecies,
+                        sightingCount,
+                        sightingDate,
+                        sightingLocation,
+                        imageFilePath,
+                        audioFilePath,
+                        sightingLat.toDouble(),
+                        sightingLng.toDouble(),
+                    )
+                }
+                // Pass the list of bird sightings to the callback
+                callback(birdSightings, null)
+            }
+            .addOnFailureListener { e ->
+                // Failed to fetch bird sightings
+                callback(emptyList(), "Error fetching bird sightings: ${e.localizedMessage}")
+            }
+    }*/
+    fun getBirdSightingsForUser(userUID: String, callback: (List<SightingData>, String?) -> Unit) {
+
+        // Create a query to retrieve bird sightings for a specific user
+        val query = db.collection("userBirds")
+            .whereEqualTo("userUID", userUID)
+
+        // Execute the query
+        query.get()
+            .addOnSuccessListener { result ->
+                // Parse the result and convert documents to SightingData objects
+                val birdSightings = result.documents.map { document ->
+                    val audioFilePath = document.getString("audioFilePath") ?: ""
+                    val imageFilePath = document.getString("imageFilePath") ?: ""
+                    val sightingCount = document.getLong("sightingCount")?.toInt() ?: 0
+                    val sightingDate = document.getString("sightingDate") ?: ""
+                    val sightingId = document.getString("sightingId") ?: ""
+                    val sightingLat = document.getString("sightingLat") ?: ""
+                    val sightingLng = document.getString("sightingLng") ?: ""
+                    val sightingLocation = document.getString("sightingLocation") ?: ""
+                    val sightingName = document.getString("sightingName") ?: ""
+                    val sightingSpecies = document.getString("sightingSpecies") ?: ""
+
+                    SightingData().apply {
+                        this.sightingId = sightingId.toInt()
+                        this.userId = userUID
+                        this.sightingName = sightingName
+                        this.sightingSpecies = sightingSpecies
+                        this.sightingCount = sightingCount
+                        this.sightingDate = sightingDate
+                        this.sightingLocation = sightingLocation
+                        this.imageFilePath = imageFilePath
+                        this.audioFilePath = audioFilePath
+                        this.sightingLat = sightingLat.toDouble()
+                        this.sightingLng = sightingLng.toDouble()
+                    }
+                }
+                // Pass the list of bird sightings to the callback
+                callback(birdSightings, null)
+            }
+            .addOnFailureListener { e ->
+                // Failed to fetch bird sightings
+                callback(emptyList(), "Error fetching bird sightings: ${e.localizedMessage}")
+            }
+    }
 }

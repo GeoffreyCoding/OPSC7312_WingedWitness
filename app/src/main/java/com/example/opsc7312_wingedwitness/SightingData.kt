@@ -15,7 +15,7 @@ import java.util.Date
 
 class SightingData(
     var sightingId: Int = 0,
-    var userId: Int = 0,
+    var userId: String = "",
     var sightingName: String = "",
     var sightingSpecies: String = "",
     var sightingCount: Int = 0,
@@ -29,7 +29,7 @@ class SightingData(
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
-        parcel.readInt(),
+        parcel.readString()?:"",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readInt(),
@@ -47,7 +47,7 @@ class SightingData(
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeInt(sightingId)
-        dest.writeInt(userId)
+        dest.writeString(userId)
         dest.writeString(sightingName)
         dest.writeString(sightingSpecies)
         dest.writeInt(sightingCount)

@@ -149,6 +149,18 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
 
+                            DBHandler.getBirdSightingsForUser(userUID) { birdSightings, error ->
+                                if (error != null) {
+                                    // Handle the error, e.g., show a toast or log the error
+                                    Toast.makeText(this, "Error fetching bird sightings: $error", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    // Update the adapter with the retrieved data
+                                    GlobalDataClass.SightingDataList.clear()
+                                    GlobalDataClass.SightingDataList.addAll(birdSightings)
+
+                                }
+                            }
+
                             val intent = Intent(this, HomePageActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
@@ -176,6 +188,7 @@ class MainActivity : AppCompatActivity() {
                 dbHandler.signUpUser(email.text.toString(), password.text.toString(),  "metric") { success, result ->
                     if (success) {
                         val userUID = result // result contains the new user's UID
+                        onLoginClick(loginUnderline)
                     } else {
                         val errorMessage = result // result contains the error message
                     }

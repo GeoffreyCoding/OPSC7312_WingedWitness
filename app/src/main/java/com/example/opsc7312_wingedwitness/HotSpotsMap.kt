@@ -392,7 +392,7 @@ class HotSpotsMap : AppCompatActivity() {
         emulatorCoordinates: LatLng,
         matchingBirds: List<ToolBox.TestBird>
     ) {
-        val fragment = markerName?.let { it1 ->
+        val fragment = markerName.let { it1 ->
             MarkerFragment.newInstance(it1, markerCoordinates, emulatorCoordinates, matchingBirds)
         }
 
@@ -428,7 +428,7 @@ class HotSpotsMap : AppCompatActivity() {
         markerCoordinates: LatLng,
         emulatorCoordinates: LatLng
     ) {
-        val fragment = markerName?.let { it1 ->
+        val fragment = markerName.let { it1 ->
             MarkerFragment.newInstanceWithoutBirds(it1, markerCoordinates, emulatorCoordinates)
         }
 

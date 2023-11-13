@@ -66,6 +66,7 @@ private val REQUEST_LOCATION_PERMISSION = 1
 
 class AddSightingActivity : AppCompatActivity() {
 
+    private lateinit var myUser: String
     private lateinit var selectedSpecies: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -83,6 +84,8 @@ class AddSightingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addsighting)
         var dataValidation = dataValidation()
+
+        val DBHandler = DBHandler()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -161,6 +164,10 @@ class AddSightingActivity : AppCompatActivity() {
         //AddSighting
         btnAddSighting.setOnClickListener {
 
+            for(user in GlobalDataClass.UserDataList){
+                myUser = user.userId
+            }
+
             //get data
             val sCount: String = edtSightingCount.text.toString()
             val sName = edtSightingName.text.toString()
@@ -176,7 +183,7 @@ class AddSightingActivity : AppCompatActivity() {
 
                 var sightingData = SightingData()
                 sightingData.sightingId = 0
-                sightingData.userId = 0
+                sightingData.userId = ""
                 sightingData.sightingCount = sCount.toInt()
                 sightingData.sightingLocation = sLocation
                 sightingData.sightingDate = sDate
@@ -196,6 +203,29 @@ class AddSightingActivity : AppCompatActivity() {
                     sightingData.imageFilePath = ""
                 }
                 GlobalDataClass.SightingDataList.add(sightingData)
+
+                sightingData.audioFilePath?.let { it1 ->
+                    sightingData.imageFilePath?.let { it2 ->
+                        DBHandler.addBirdToFireBase(
+                            it1,
+                            it2,
+                            sightingData.sightingCount,
+                            sightingData.sightingDate,
+                            sightingData.sightingId.toString(),
+                            sightingData.sightingLat.toString(),
+                            sightingData.sightingLng.toString(),
+                            sightingData.sightingLocation,
+                            sightingData.sightingName,
+                            sightingData.sightingSpecies,
+                            myUser){ success, result ->
+                            if (success) {
+                                Toast.makeText(this, result, Toast.LENGTH_SHORT)// result contains the new user's UID
+                            } else {
+                                Toast.makeText(this, result, Toast.LENGTH_SHORT)// result contains the error message
+                            }
+                        }
+                    }
+                }
 
                 Toast.makeText(this, "Sighting Added successfully!", Toast.LENGTH_SHORT).show()
 

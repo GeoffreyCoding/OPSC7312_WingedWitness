@@ -23,7 +23,8 @@ import kotlin.collections.ArrayList
 
 
 class MarkerFragment : Fragment() {
-
+    private lateinit var myUser: String
+    private val DBHandler = DBHandler()
     private val selectedSpeciesList = mutableListOf<String>()
     private val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private val currentDate = sdf.format(Date())
@@ -101,8 +102,12 @@ class MarkerFragment : Fragment() {
                 }
                 setNegativeButton("Add to Hotspot") { _, _ ->
                     if (markerCoordinates != null) {
-                        showAddToHotspotDialog(tvUserBird, placeName.toString(),
-                            markerCoordinates.latitude.toFloat(), markerCoordinates.longitude.toFloat())
+                        showAddToHotspotDialog(
+                            tvUserBird,
+                            placeName.toString(),
+                            markerCoordinates.latitude.toFloat(),
+                            markerCoordinates.longitude.toFloat()
+                        )
                     }
                 }
                 setNeutralButton("Cancel") { dialog, _ ->
@@ -112,15 +117,19 @@ class MarkerFragment : Fragment() {
             builder.show()
         }
 
-        if ((matchingBirds != null) && matchingBirds.isNotEmpty()) {
-            // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
-            val userBirdNames = GlobalDataClass.SightingDataList.joinToString("\n") {
-                "Sighted Bird:\n" +
-                        "Bird Name: ${it.sightingName}\n" +
-                        "Date: ${it.sightingDate}\n" +
-                        "Location: ${it.sightingLocation}\n"}
+        if ((matchingBirds != null) && matchingBirds.isNotEmpty() && markerCoordinates != null) {
 
-            tvUserBird.text = userBirdNames
+            if (hasUserSightedBirdsAtMarker(markerCoordinates.latitude.toFloat(), markerCoordinates.longitude.toFloat(), placeName)) {
+                // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
+                val userBirdNames = GlobalDataClass.SightingDataList.joinToString("\n") {
+                    "Sighted Bird:\n" +
+                            "Bird Name: ${it.sightingName}\n" +
+                            "Date: ${it.sightingDate}\n" +
+                            "Location: ${it.sightingLocation}\n"
+                }
+
+                tvUserBird.text = userBirdNames
+            }
 
             val birdNames = matchingBirds.joinToString("\n") {
                 "Bird Name: ${it.comName}\n" +
@@ -131,7 +140,7 @@ class MarkerFragment : Fragment() {
             tvBird.text = birdNames
 
 
-        } else if (GlobalDataClass.SightingDataList != null && GlobalDataClass.SightingDataList.isNotEmpty()) {
+        } else if (GlobalDataClass.SightingDataList.isNotEmpty()) {
             updateUserSightedBirdsData()
         } else {
             setNoBirdsMessage()
@@ -148,18 +157,25 @@ class MarkerFragment : Fragment() {
 
     ///------------------------------------------------------------------------------------------///
 
+    private fun hasUserSightedBirdsAtMarker(lat: Float, lng: Float, placeName: String?): Boolean {
+        return GlobalDataClass.SightingDataList.any { userSightedBird ->
+            // Adjust the condition based on your requirements
+            userSightedBird.sightingLat == lat.toDouble() &&
+                    userSightedBird.sightingLng == lng.toDouble()
+        }
+    }
+
     private fun updateUserSightedBirdsData() {
-        val tvBird = view?.findViewById<TextView>(R.id.tv_bird)
+        val tvUserBird = view?.findViewById<TextView>(R.id.tv_userBird)
 
         if (GlobalDataClass.SightingDataList.isNotEmpty()) {
             // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
             val birdNames = GlobalDataClass.SightingDataList.joinToString("\n") {
-                "Sighted Bird:\n" +
-                        "Bird Name: ${it.sightingName}\n" +
+                "Bird Name: ${it.sightingName}\n" +
                         "Date: ${it.sightingDate}\n" +
                         "Location: ${it.sightingLocation}\n"
             }
-            tvBird?.text = birdNames
+            tvUserBird?.text = birdNames
             // Set the text of the TextView to the user-sighted bird data
         } else {
             setNoBirdsMessage()
@@ -179,7 +195,7 @@ class MarkerFragment : Fragment() {
 
                 var sightingData = SightingData()
                 sightingData.sightingId = 0
-                sightingData.userId = 0
+                sightingData.userId = ""
                 sightingData.sightingCount = matchingBirds[which].howMany
                 sightingData.sightingLocation = matchingBirds[which].locName
                 sightingData.sightingDate = currentDate
@@ -274,35 +290,76 @@ class MarkerFragment : Fragment() {
 
     ///------------------------------------------------------------------------------------------///
 
-    private fun handleAddToHotspot(etBirdName: EditText, etSpecies: EditText, etAmount: EditText,
-                                   user: TextView, place: String, lat: Float, lng: Float) {
+    private fun handleAddToHotspot(
+        etBirdName: EditText, etSpecies: EditText, etAmount: EditText,
+        user: TextView, place: String, lat: Float, lng: Float
+    ) {
+        for (user in GlobalDataClass.UserDataList) {
+            myUser = user.userId
+        }
+
+        val cleanedPlaceName = if (place.startsWith("\"") && place.endsWith("\"")) {
+            // Remove leading and trailing quotes
+            place.trim('\"')
+        } else {
+            // Keep the placeName as it is
+            place
+        }
         val birdName = etBirdName.text.toString()
         val species = etSpecies.text.toString()
         val amount = etAmount.text.toString().toIntOrNull()
 
-        if (birdName.isNotEmpty() && species.isNotEmpty() && amount != null) {
-            if (birdName.isNotEmpty() && species.isNotEmpty() && amount != null) {
-                val newSighting = SightingData().apply {
-                    sightingId = 0
-                    userId = 0
-                    sightingLocation = place
-                    sightingDate = currentDate
-                    sightingName = birdName
-                    sightingSpecies = species
-                    sightingCount = amount
-                    sightingLat = lat.toDouble()
-                    sightingLng = lng.toDouble()
-                }
-                GlobalDataClass.SightingDataList.add(newSighting)
 
-                val birdDetails = "Bird Name: $birdName\nBird Date: $currentDate\n" +
-                        "Bird Species: $species\n" +
-                        "Bird Count: $amount"
-                user.text = birdDetails
+        if (birdName.isNotEmpty() && species.isNotEmpty() && amount != null) {
+            val newSighting = SightingData().apply {
+                sightingId = 0
+                userId = ""
+                sightingLocation = place
+                sightingDate = currentDate
+                sightingName = birdName
+                sightingSpecies = species
+                sightingCount = amount
+                sightingLat = lat.toDouble()
+                sightingLng = lng.toDouble()
+            }
+            GlobalDataClass.SightingDataList.add(newSighting)
+            DBHandler.addBirdToFireBase(
+                "",
+                "",
+                newSighting.sightingCount,
+                newSighting.sightingDate,
+                newSighting.sightingId.toString(),
+                newSighting.sightingLat.toString(),
+                newSighting.sightingLng.toString(),
+                newSighting.sightingLocation,
+                newSighting.sightingName,
+                newSighting.sightingSpecies,
+                myUser
+            ) { success, result ->
+                if (success) {
+                    Toast.makeText(
+                        this.context,
+                        result,
+                        Toast.LENGTH_SHORT
+                    )// result contains the new user's UID
+                } else {
+                    Toast.makeText(
+                        this.context,
+                        result,
+                        Toast.LENGTH_SHORT
+                    )// result contains the error message
+                }
             }
         }
+
+
+        val birdDetails = "Bird Name: $birdName\nBird Date: $currentDate\n" +
+                "Bird Species: $species\n" +
+                "Bird Count: $amount"
+        user.text = birdDetails
     }
-    ///-----------------------------------------------------------------------------------------------------------------///
+
+///-----------------------------------------------------------------------------------------------------------------///
 
     companion object {
         fun newInstance(
@@ -353,6 +410,6 @@ class MarkerFragment : Fragment() {
         }
     }
 
-    ///-----------------------------------------------------------------------------------------------------------------///
+///-----------------------------------------------------------------------------------------------------------------///
 }
 //-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
