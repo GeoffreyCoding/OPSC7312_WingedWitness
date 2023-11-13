@@ -5,6 +5,8 @@ Geoffrey Huth - ST10081932
 Gabriel Grobbelaar - ST10082002
 Liam Colbert - ST10081986
 -----------------------------------------------*/
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
@@ -17,8 +19,6 @@ import com.example.opsc7312_wingedwitness.databinding.ActivityHotSpotsMapBinding
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mapbox.android.core.permissions.PermissionsListener
-import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.common.location.Location
 import com.mapbox.geojson.Point
@@ -50,45 +50,29 @@ import com.example.opsc7312_wingedwitness.SightingData as SightingData
 
 class HotSpotsMap : AppCompatActivity() {
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Declarations
     private var mapView: MapView? = null
     private var emulatorLatitude: Double = 0.0
     private var emulatorLongitude: Double = 0.0
-
     private var dist: Double = 2.0
-
     private var progressDialog: ProgressDialog? = null
-
     private val mapBoxHelper = HotSpotHelper()
-
     private lateinit var locationPermissionHelper: LocationPermissionHelper
-
     private var birdHotSpotList = mutableListOf<ToolBox.BirdHotspots>()
-
-
     private val mapAnimationOptions = MapAnimationOptions.Builder().duration(1500L).build()
-
     private lateinit var myButton: ImageButton
-
     private lateinit var userButton: ImageButton
-
     private lateinit var backButton: ImageButton
-
     private val navigationLocationProvider = NavigationLocationProvider()
 
-    private val locationObserver = object : LocationObserver {
-        /**
-         * Invoked as soon as the [Location] is available.
-         */
-        override fun onNewRawLocation(rawLocation: android.location.Location) {
-            // Not implemented in this example. However, if you want you can also
-            // use this callback to get location updates, but as the name suggests
-            // these are raw location updates which are usually noisy.
-        }
 
-        /**
-         * Provides the best possible location update, snapped to the route or
-         * map-matched to the road if possible.
-         */
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Location Observer Method
+    private val locationObserver = object : LocationObserver {
+
+        override fun onNewRawLocation(rawLocation: android.location.Location) {}
+
         override fun onNewLocationMatcherResult(locationMatcherResult: LocationMatcherResult) {
             val enhancedLocation = locationMatcherResult.enhancedLocation
             navigationLocationProvider.changePosition(
@@ -100,8 +84,12 @@ class HotSpotsMap : AppCompatActivity() {
         }
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Bindings
     private lateinit var binding: ActivityHotSpotsMapBinding
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Declarations
     private val onIndicatorBearingChangedListener = OnIndicatorBearingChangedListener {
         mapView?.getMapboxMap()?.setCamera(CameraOptions.Builder().bearing(it).build())
     }
@@ -123,9 +111,8 @@ class HotSpotsMap : AppCompatActivity() {
         override fun onMoveEnd(detector: MoveGestureDetector) {}
     }
 
-
     ///------------------------------------------------------------------------------------------///
-
+    /// On create method for the map.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHotSpotsMapBinding.inflate(layoutInflater)
@@ -152,6 +139,8 @@ class HotSpotsMap : AppCompatActivity() {
             backButton = findViewById(R.id.btnBack)
             backButton.setOnClickListener {
                 val intent = Intent(this, HomePageActivity::class.java)
+                val sightingData = SightingData()
+                intent.putExtra("sightingData", sightingData)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
@@ -188,12 +177,12 @@ class HotSpotsMap : AppCompatActivity() {
                     }
 
                     runOnUiThread { consumeHotSpotsBirdJson(bird) }
+                    runOnUiThread {addUserBirdPointAnnotation()}
                     progressDialog?.dismiss()
 
                 }
             }
         }
-
     }
 
     ///------------------------------------------------------------------------------------------///
@@ -213,7 +202,6 @@ class HotSpotsMap : AppCompatActivity() {
 
     ///------------------------------------------------------------------------------------------///
     // set-up the spinner for the hotspots within proximity
-
     private fun setupDistanceSpinner(mapboxMap: MapView) {
 
         val distance = findViewById<Spinner>(R.id.userDistance)
@@ -232,10 +220,7 @@ class HotSpotsMap : AppCompatActivity() {
             ) {
                 // Retrieve the selected value from the spinner and set it to the dist variable
                 dist = distanceItems[position].toDouble()
-
-
             }
-
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 dist = 2.0
             }
@@ -243,14 +228,9 @@ class HotSpotsMap : AppCompatActivity() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
-    private fun findBirdsWithinRadius(
-        markerCoordinateslat: Double,
-        markerCoordinatesng: Double,
-        callback: (List<ToolBox.TestBird>) -> Unit
-    ) {
+    /// Find birds in a specific radius
+    private fun findBirdsWithinRadius(markerCoordinateslat: Double, markerCoordinatesng: Double, callback: (List<ToolBox.TestBird>) -> Unit) {
         // Make an asynchronous network request to fetch bird data
-
         thread {
             val birdData = try {
                 val birdURL = buildURLForAllEbirdInfo(
@@ -261,7 +241,6 @@ class HotSpotsMap : AppCompatActivity() {
             } catch (e: Exception) {
                 null
             }
-
             runOnUiThread {
                 if (!birdData.isNullOrBlank()) {
                     // Parse the bird data here
@@ -275,7 +254,7 @@ class HotSpotsMap : AppCompatActivity() {
     }
 
     ///------------------------------------------------------------------------------------------///
-
+    /// Parse the bird data
     private fun parseBirdData(birdData: String): List<ToolBox.TestBird> {
         val gson = Gson()
         val listType = object : TypeToken<List<ToolBox.TestBird>>() {}.type
@@ -284,13 +263,13 @@ class HotSpotsMap : AppCompatActivity() {
 
     ///------------------------------------------------------------------------------------------///
     // Consume the ebird api json and add to a list
-
     private fun consumeHotSpotsBirdJson(birdJSON: String?) {
         val birds = parseBirdJSON(birdJSON)
         addBirdPointAnnotation(birds)
     }
 
     ///------------------------------------------------------------------------------------------///
+    /// Passing the json data to a list.
     private fun parseBirdJSON(birdJSON: String?): List<ToolBox.Birds> {
         val mutableBirdList = mutableListOf<ToolBox.Birds>()
 
@@ -358,17 +337,47 @@ class HotSpotsMap : AppCompatActivity() {
         }
     }
 
+    ///------------------------------------------------------------------------------------------///
+    /// Creates a fragment for user sightings.
+    private fun addUserBirdPointAnnotation() {
 
-///------------------------------------------------------------------------------------------///
-/// Display marker fragment
+        for (bird in GlobalDataClass.SightingDataList) {
+            val myBirdHotspots = ToolBox.BirdHotspots(bird.sightingName, bird.sightingLat.toFloat(), bird.sightingLng.toFloat())
+            birdHotSpotList.add(myBirdHotspots)
 
+            // Replace the previous code with the addBirdPointAnnotation function
+            mapBoxHelper.addUserBirdPointAnnotation(mapView!!) { markerCoordinates ->
+                // Handle the bird marker click event here
+                    if (GlobalDataClass.SightingDataList.isNotEmpty()) {
+                        // Handle the case when matching birds are found
+                        showUserSightedBirdsFragment(
+                            bird.sightingLocation,
+                            markerCoordinates,
+                            LatLng(emulatorLatitude, emulatorLongitude)
+                        )
+                    } else {
+                        // Handle the case when no matching birds are found
+                        Toast.makeText(this, "Marker Clicked: ${bird.sightingLocation}", Toast.LENGTH_SHORT)
+                            .show()
+                        createMarkerFragmentWithoutBirds(
+                            bird.sightingLocation,
+                            markerCoordinates,
+                            LatLng(emulatorLatitude, emulatorLongitude)
+                        )
+                    }
+                }
+            }
+        }
+
+    ///------------------------------------------------------------------------------------------///
+    /// Display marker fragment
     private fun showMarkerFragment(
         markerName: String,
         markerCoordinates: LatLng,
         emulatorCoordinates: LatLng,
         matchingBirds: List<ToolBox.TestBird>
     ) {
-        val fragment = markerName?.let { it1 ->
+        val fragment = markerName.let { it1 ->
             MarkerFragment.newInstance(it1, markerCoordinates, emulatorCoordinates, matchingBirds)
         }
 
@@ -380,12 +389,32 @@ class HotSpotsMap : AppCompatActivity() {
         }
     }
 
-    private fun createMarkerFragmentWithoutBirds(
-        markerName: String,
+    ///------------------------------------------------------------------------------------------///
+    /// Creates a fragment for user sightings.
+    private fun showUserSightedBirdsFragment(
+        placeName: String,
         markerCoordinates: LatLng,
-        emulatorCoordinates: LatLng
+        emulatorCoordinates: LatLng,
     ) {
-        val fragment = markerName?.let { it1 ->
+        val fragment = MarkerFragment.newInstanceForUserSightedBirds(
+            placeName,
+            markerCoordinates,
+            emulatorCoordinates,
+        )
+
+        if (fragment != null) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragmentContainer, fragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+    }
+
+    ///------------------------------------------------------------------------------------------///
+    /// Creates a fragment without any sightings.
+    private fun createMarkerFragmentWithoutBirds(markerName: String, markerCoordinates: LatLng,
+        emulatorCoordinates: LatLng) {
+        val fragment = markerName.let { it1 ->
             MarkerFragment.newInstanceWithoutBirds(it1, markerCoordinates, emulatorCoordinates)
         }
 
@@ -397,14 +426,13 @@ class HotSpotsMap : AppCompatActivity() {
         }
     }
 
-///------------------------------------------------------------------------------------------///
-
+    ///------------------------------------------------------------------------------------------///
+    ///Method for the Gestures
     private fun setupGesturesListener() {
         mapView?.gestures?.addOnMoveListener(onMoveListener)
     }
 
-///------------------------------------------------------------------------------------------///
-
+    ///------------------------------------------------------------------------------------------///
     private fun initLocationComponent() {
         val locationComponentPlugin = mapView?.location
         locationComponentPlugin?.updateSettings {
@@ -440,8 +468,8 @@ class HotSpotsMap : AppCompatActivity() {
         )
     }
 
-///------------------------------------------------------------------------------------------///
-
+    ///------------------------------------------------------------------------------------------///
+    /// When the user moves on the map.
     private fun onCameraTrackingDismissed() {
         Toast.makeText(this, "Free roaming", Toast.LENGTH_SHORT).show()
         mapView?.location
@@ -451,19 +479,15 @@ class HotSpotsMap : AppCompatActivity() {
         mapView?.gestures?.removeOnMoveListener(onMoveListener)
     }
 
-///------------------------------------------------------------------------------------------///
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    ///------------------------------------------------------------------------------------------///
+    /// Requesting permission from the user device.
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-///------------------------------------------------------------------------------------------///
-
+    ///------------------------------------------------------------------------------------------///
+    /// Allow for navigation to take place.
     private val mapboxNavigation: MapboxNavigation by requireMapboxNavigation(
         onResumedObserver = object : MapboxNavigationObserver {
             @SuppressLint("MissingPermission")
@@ -479,8 +503,8 @@ class HotSpotsMap : AppCompatActivity() {
         onInitialize = this::initNavigation
     )
 
-///------------------------------------------------------------------------------------------///
-
+    ///------------------------------------------------------------------------------------------///
+    /// Enabling navigation feature.
     private fun initNavigation() {
         MapboxNavigationApp.setup(
             NavigationOptions.Builder(this)
@@ -490,15 +514,12 @@ class HotSpotsMap : AppCompatActivity() {
         // Instantiate the location component which is the key component to fetch location updates.
         binding.mapView.location.apply {
             setLocationProvider(navigationLocationProvider)
-
-            // When true, the blue circular puck is shown on the map. If set to false, user
-            // location in the form of puck will not be shown on the map.
             enabled = true
         }
     }
 
-///------------------------------------------------------------------------------------------///
-
+    ///------------------------------------------------------------------------------------------///
+    /// Changing the camera position.
     private fun updateCamera(location: android.location.Location) {
 
         mapView?.camera?.easeTo(
@@ -515,7 +536,7 @@ class HotSpotsMap : AppCompatActivity() {
     }
 
     ///------------------------------------------------------------------------------------------///
-/// Map stuff
+    /// Map stuff
     @SuppressLint("Lifecycle")
     override fun onStart() {
         super.onStart()
@@ -545,6 +566,7 @@ class HotSpotsMap : AppCompatActivity() {
             ?.removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
         this.mapView?.gestures?.removeOnMoveListener(onMoveListener)
     }
-///------------------------------------------------------------------------------------------///
+    ///------------------------------------------------------------------------------------------///
 
 }
+///---------------------------------------EndOfFile----------------------------------------------///

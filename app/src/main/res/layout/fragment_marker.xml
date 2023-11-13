@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Root layout of the MarkerFragment -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +9,7 @@
     android:background="@android:color/white"
     tools:context=".MarkerFragment">
 
-    <!-- Add a TextView for the place name -->
+    <!-- CardView for the place name -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardHeading0"
         android:layout_width="match_parent"
@@ -17,11 +19,13 @@
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
+        <!-- FrameLayout to hold place name TextView and close button -->
         <FrameLayout
             android:id="@+id/relHeading"
             android:layout_width="match_parent"
             android:layout_height="90dp">
 
+            <!-- TextView to display place name -->
             <TextView
                 android:id="@+id/placeNameTextView"
                 android:layout_width="317dp"
@@ -32,6 +36,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="18dp" />
 
+            <!-- Close button to close the fragment -->
             <ImageButton
                 android:id="@+id/btn_close"
                 android:layout_width="60dp"
@@ -42,7 +47,7 @@
         </FrameLayout>
     </androidx.cardview.widget.CardView>
 
-
+    <!-- CardView for additional information and navigation -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardHeading1"
         android:layout_width="match_parent"
@@ -53,12 +58,14 @@
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
+        <!-- FrameLayout to hold TextView, navigation button, and add bird button -->
         <FrameLayout
             android:id="@+id/relHeading1"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_below="@+id/relHeading">
 
+            <!-- TextView for additional information -->
             <TextView
                 android:id="@+id/tv_Navigate"
                 android:layout_width="match_parent"
@@ -69,6 +76,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="18dp" />
 
+            <!-- Navigation button -->
             <ImageButton
                 android:id="@+id/btn_navigation"
                 android:layout_width="60dp"
@@ -77,19 +85,30 @@
                 android:backgroundTint="#ECECEC"
                 android:src="@drawable/baseline_share_location_24" />
 
+            <!-- Add bird button -->
+            <ImageButton
+                android:id="@+id/addBird"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="top|right"
+                android:backgroundTint="#ECECEC"
+                android:src="@drawable/fragment_add" />
+
         </FrameLayout>
     </androidx.cardview.widget.CardView>
 
-
+    <!-- RelativeLayout for user and hotspot information -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/cardHeading1">
 
+        <!-- ScrollView to handle scrolling content -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!-- LinearLayout to hold user and hotspot CardViews -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,6 +116,39 @@
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/userCardHeading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_below="@+id/cardHeading1"
+                    app:cardBackgroundColor="#ECECEC"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp">
+
+                    <!-- FrameLayout to hold TextView, navigation button, and add bird button -->
+                    <FrameLayout
+                        android:id="@+id/relUserHeading"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_below="@+id/relHeading1">
+
+                        <!-- TextView for additional information -->
+                        <TextView
+                            android:id="@+id/tv_User"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top|left"
+                            android:padding="16dp"
+                            android:text="Personal Sightings"
+                            android:textColor="@android:color/black"
+                            android:textSize="18dp" />
+
+                    </FrameLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- CardView for user information -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cdView_User"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
@@ -104,6 +156,59 @@
                     app:cardCornerRadius="8dp"
                     app:cardElevation="4dp">
 
+                    <!-- TextView to display user information -->
+                    <TextView
+                        android:id="@+id/tv_userBird"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:padding="16dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/HotspotCardHeading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_below="@+id/cdView_User"
+                    app:cardBackgroundColor="#ECECEC"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp">
+
+                    <!-- FrameLayout to hold TextView, navigation button, and add bird button -->
+                    <FrameLayout
+                        android:id="@+id/relHotspotHeading"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_below="@+id/cdView_User">
+
+                        <!-- TextView for additional information -->
+                        <TextView
+                            android:id="@+id/tv_Hotspot"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top|left"
+                            android:padding="16dp"
+                            android:text="Hotspot Sightings"
+                            android:textColor="@android:color/black"
+                            android:textSize="18dp" />
+
+                    </FrameLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- CardView for hotspot information -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cdView_Hotspot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:cardBackgroundColor="#ECECEC"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp">
+
+                    <!-- TextView to display hotspot information -->
                     <TextView
                         android:id="@+id/tv_bird"
                         android:layout_width="match_parent"

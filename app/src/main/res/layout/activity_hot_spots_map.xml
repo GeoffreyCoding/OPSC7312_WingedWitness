@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Root layout of the HotSpotsMap activity -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,11 +9,13 @@
     android:layout_height="match_parent"
     tools:context=".HotSpotsMap">
 
+    <!-- FrameLayout for the spinner and distance selection -->
     <FrameLayout
         android:id="@+id/frameSpinner"
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
+        <!-- CardView to hold the components -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="70dp"
@@ -20,7 +24,7 @@
             app:cardBackgroundColor="#ECECEC"
             app:cardElevation="4dp">
 
-
+            <!-- Back button to navigate back -->
             <ImageButton
                 android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
@@ -31,6 +35,7 @@
                 android:layout_marginBottom="16dp"
                 app:srcCompat="@drawable/baseline_arrow_back_24" />
 
+            <!-- Textview to display 'Distance' -->
             <TextView
                 android:layout_width="102dp"
                 android:layout_height="wrap_content"
@@ -39,9 +44,9 @@
                 android:text="Distance"
                 android:textAlignment="center"
                 android:textAllCaps="true">
-
             </TextView>
 
+            <!-- Spinner for user distance selection -->
             <Spinner
                 android:id="@+id/userDistance"
                 android:layout_width="102dp"
@@ -57,26 +62,29 @@
 
         </androidx.cardview.widget.CardView>
 
-
     </FrameLayout>
 
+    <!-- RelativeLayout for the MapView -->
     <RelativeLayout
         android:id="@+id/relMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/frameSpinner">
 
+        <!-- FrameLayout to contain MapView, user location button, and FAB location button -->
         <FrameLayout
             android:id="@+id/frameMap"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!-- MapView to display the map -->
             <com.mapbox.maps.MapView
                 android:id="@+id/mapView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 mapbox:mapbox_cameraZoom="0" />
 
+            <!-- Button to center the map on user's location -->
             <ImageButton
                 android:id="@+id/userLocation"
                 android:layout_width="wrap_content"
@@ -87,6 +95,7 @@
                 android:layout_marginBottom="64dp"
                 app:srcCompat="@drawable/baseline_my_location_24" />
 
+            <!-- FAB button to display additional location information -->
             <ImageButton
                 android:id="@+id/fabLocation"
                 android:layout_width="wrap_content"
@@ -99,6 +108,7 @@
         </FrameLayout>
     </RelativeLayout>
 
+    <!-- FrameLayout for the fragment container -->
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"

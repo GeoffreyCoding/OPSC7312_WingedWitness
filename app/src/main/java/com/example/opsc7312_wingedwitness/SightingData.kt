@@ -8,22 +8,76 @@ Liam Colbert - ST10081986
 //---------------------------------------------------------------------------------------------------------------------//
 //Imports
 import android.media.Image
+import android.os.Parcel
+import android.os.Parcelable
 import java.util.Date
 //---------------------------------------------------------------------------------------------------------------------//
 
-class SightingData {
+class SightingData(
 
     //-----------------------------------------------------------------------------------------------------------------//
     //Declarations
-    var sightingId: Int = 0
-    var userId: Int = 0
-    var sightingName: String = ""
-    var sightingSpecies: String = ""
-    var sightingCount: Int = 0
-    var sightingDate: String = ""
-    var sightingLocation: String = ""
-    var imageFilePath: String? = null
-    var audioFilePath: String? = null
-    var sightingLat:Double = 0.0
-    var sightingLng:Double = 0.0
+    var sightingId: Int = 0,
+    var userId: String = "",
+    var sightingName: String = "",
+    var sightingSpecies: String = "",
+    var sightingCount: Int = 0,
+    var sightingDate: String = "",
+    var sightingLocation: String = "",
+    var imageFilePath: String? = null,
+    var audioFilePath: String? = null,
+    var sightingLat: Double = 0.0,
+    var sightingLng: Double = 0.0
+) : Parcelable {
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //constructor
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readString()?:"",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readDouble(),
+        parcel.readDouble()
+    )
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Describe Contents
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Write
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeInt(sightingId)
+        dest.writeString(userId)
+        dest.writeString(sightingName)
+        dest.writeString(sightingSpecies)
+        dest.writeInt(sightingCount)
+        dest.writeString(sightingDate)
+        dest.writeString(sightingLocation)
+        dest.writeString(imageFilePath)
+        dest.writeString(audioFilePath)
+        dest.writeDouble(sightingLat)
+        dest.writeDouble(sightingLng)
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Companion Object
+    companion object CREATOR : Parcelable.Creator<SightingData> {
+        override fun createFromParcel(parcel: Parcel): SightingData {
+            return SightingData(parcel)
+        }
+
+        //The Array
+        override fun newArray(size: Int): Array<SightingData?> {
+            return arrayOfNulls(size)
+        }
+    }
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

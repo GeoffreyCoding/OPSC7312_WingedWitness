@@ -5,7 +5,7 @@ Geoffrey Huth - ST10081932
 Gabriel Grobbelaar - ST10082002
 Liam Colbert - ST10081986
 -----------------------------------------------*/
-//---------------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------//
 //Imports
 import android.content.Intent
 import android.os.Bundle
@@ -15,15 +15,17 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 //import com.mapbox.android.gestures.Utils
 import kotlin.concurrent.thread
 
-//---------------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------//
 
 
 class MainActivity : AppCompatActivity() {
 
-    //-----------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //Declarations
     private lateinit var loginUnderline: View
     private lateinit var signUpUnderline: View
@@ -36,12 +38,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loginEmail:TextView
     private lateinit var loginPassword:TextView
 
-    //-----------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //OnCreate Method
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //initializing firebase firestore
+        Firebase.initialize(this)
         //FindViews
         loginEmail = findViewById(R.id.LoginEmailtxt)
         loginPassword = findViewById(R.id.LoginPasswordtxt)
@@ -54,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         var email = findViewById<EditText>(R.id.SignUpEmailtxt)
         var password = findViewById<EditText>(R.id.SignUpPasswordtxt)
         var confPassword = findViewById<EditText>(R.id.SignUpconfirmtxt)
+        //looking for user in firebase auth db
+        val DBHandler = DBHandler()
 
         // Initialize login views
         loginViews = listOf(
@@ -73,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.SignUpconfirmtxt)
         )
 
-        //-------------------------------------------------------------------------------------------------------------//
+        //----------------------------------------------------------------------------------------//
         //SignUp
         signUpTextView.setOnClickListener {
             isSignUpMode = !isSignUpMode
@@ -95,81 +100,111 @@ class MainActivity : AppCompatActivity() {
         }
         var dataValidation = dataValidation()
 
-        //-------------------------------------------------------------------------------------------------------------//
+        //----------------------------------------------------------------------------------------//
         //Login
         buttonLogin.setOnClickListener {
             if(buttonLogin.text=="LogIn"){
+                errorLabel.visibility = View.INVISIBLE
                 val email = findViewById<EditText>(R.id.LoginEmailtxt).text.toString()
                 val password = findViewById<EditText>(R.id.LoginPasswordtxt).text.toString()
-                val user = GlobalDataClass.UserDataList.find { it.userEmail == email
-                        && it.userPassword == password }
-                if (user != null) {
-                    var userData = UserData()
-                    userData.userId = user.userId
-                    userData.userEmail = user.userEmail
-                    userData.userPassword = user.userPassword
-                    userData.metricOrImperial = user.metricOrImperial
-                    userData.lat = user.lat
-                    userData.lng = user.lng
-                    val intent = Intent(this, HomePageActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
 
-                } else {
-                    // No user with the provided email and password was found
+                val dataValidation = dataValidation()
+
+                if(email.isEmpty() || password.isEmpty()){
+                    errorLabel.text = "Empty fields are not allowed"
+                    errorLabel.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
+
+                val validationResult = dataValidation.validateEmail(email)
+                if(validationResult != "true"){
                     errorLabel.visibility = View.VISIBLE
                     loginEmail.text = ""
                     loginPassword.text = ""
+                    errorLabel.text = "Incorrect email or password!"
+                    return@setOnClickListener
+                }
+
+                DBHandler.signInUser(email, password) { isSuccess, result ->
+                    runOnUiThread {
+                        if (isSuccess) {
+                            //get corresponding ID from firebase
+                            val userUID = result.toString()
+                            //get data with ID
+                            DBHandler.getUserDataByUserUID(userUID) { userData ->
+                                runOnUiThread {
+                                    if (userData != null) {
+                                        GlobalDataClass.UserDataList.clear()
+
+                                        var internalUserData = UserData()
+                                        internalUserData.userId = userUID
+                                        internalUserData.userEmail = userData.userEmail
+                                        internalUserData.metricOrImperial = userData.metricOrImperial
+
+                                        GlobalDataClass.UserDataList.add(internalUserData)
+                                        GlobalDataClass.imperialOrMetric = userData.metricOrImperial
+                                    } else {
+
+                                    }
+                                }
+                            }
+
+                            DBHandler.getBirdSightingsForUser(userUID) { birdSightings, error ->
+                                if (error != null) {
+                                    // Handle the error, e.g., show a toast or log the error
+                                    Toast.makeText(this, "Error fetching bird sightings: $error", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    // Update the adapter with the retrieved data
+                                    GlobalDataClass.SightingDataList.clear()
+                                    GlobalDataClass.SightingDataList.addAll(birdSightings)
+
+                                }
+                            }
+
+                            val intent = Intent(this, HomePageActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        } else {
+                            // No user with the provided email and password was found
+                            errorLabel.visibility = View.VISIBLE
+                            loginEmail.text = ""
+                            loginPassword.text = ""
+                            errorLabel.text = "Incorrect email or password!"
+                        }
+                    }
                 }
             }
             else{
-
-                if (dataValidation.validateSingUpInput(email.text.toString(),password.text.toString(),confPassword.text.toString())) {
-
-                    // Input is valid, create UserData object
-                    errorLabel.visibility = View.INVISIBLE
-                    val userData = UserData()
-                    val userId = getLowestInt()
-                    if(userId == null){
-                        userData.userId = 0
-                        userData.userEmail = email.text.toString()
-                        userData.userPassword = password.text.toString()
-                        userData.metricOrImperial = 'M'.toString()
-                        GlobalDataClass.UserDataList.add(userData)
-                        Toast.makeText(this, "SignUp Successful!", Toast.LENGTH_SHORT).show()
-                        showViews(loginViews)
-                        hideViews(signUpViews)
-                        buttonLogin.text = "LogIn"
-                    }
-                    else if (userId != null){
-                        userData.userId = userId.userId
-                        userData.userEmail = email.text.toString()
-                        userData.userPassword = password.text.toString()
-                        userData.metricOrImperial = 'M'.toString()
-                        GlobalDataClass.UserDataList.add(userData)
-                        Toast.makeText(this, "SignUp Successful!", Toast.LENGTH_SHORT).show()
-                        showViews(loginViews)
-                        hideViews(signUpViews)
-                        buttonLogin.text = "LogIn"
-                    }
-                }
-                else {
-                    // Handle invalid input (e.g., display an error message)
+                val userEmail = email.text.toString()
+                val userPwd = password.text.toString()
+                val userConfPwd = confPassword.text.toString()
+                val validateResult = dataValidation.validateSingUpInput(userEmail,userPwd,userConfPwd)
+                if(validateResult != "true"){
+                    errorLabel.text = validateResult
                     errorLabel.visibility = View.VISIBLE
-                    Toast.makeText(this, "Error password must be at least 6 characters long and email must be valid", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                val dbHandler = DBHandler()
+                dbHandler.signUpUser(email.text.toString(), password.text.toString(),  "metric") { success, result ->
+                    if (success) {
+                        val userUID = result // result contains the new user's UID
+                        onLoginClick(loginUnderline)
+                    } else {
+                        val errorMessage = result // result contains the error message
+                    }
                 }
             }
         }
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //------------------------------------================----------------------------------------//
     //GetLowestInt
     fun getLowestInt() : UserData? {
         val userId = GlobalDataClass.UserDataList.minByOrNull { it.userId }
         return userId
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //On Login
     fun onLoginClick(view: View) {
         loginUnderline.visibility = View.VISIBLE
@@ -180,7 +215,7 @@ class MainActivity : AppCompatActivity() {
         buttonLogin.text = "LogIn"
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //On SignUp
     fun onSignUpClick(view: View) {
         signUpUnderline.visibility = View.VISIBLE
@@ -191,7 +226,7 @@ class MainActivity : AppCompatActivity() {
         buttonLogin.text = "Sign-Up"
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //Show Views
     private fun showViews(views: List<View>) {
         for (view in views) {
@@ -199,11 +234,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //Hide Views
     private fun hideViews(views: List<View>) {
         for (view in views) {
             view.visibility = View.GONE
         }
     }
-}//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
+}//------------------------------...ooo000 END OF CLASS 000ooo...---------------------------------//

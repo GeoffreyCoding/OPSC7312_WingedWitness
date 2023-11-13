@@ -34,14 +34,18 @@ class accounts_page : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accounts_page)
+        val DBHandler = DBHandler()
+
         //FindViews
         addEntry = findViewById(R.id.addEntry)
         back = findViewById(R.id.Back)
         recyclerView = findViewById(R.id.recyclerView)
         rbMetric = findViewById(R.id.radioButtonMetric)
         rbImperial = findViewById(R.id.radioButtonImperial)
+
         //Changing base setting of imperial or metric
         var imperialOrMetric = GlobalDataClass.imperialOrMetric
+        val currentUserUID = GlobalDataClass.UserDataList[0].userId
         if (imperialOrMetric == "metric") {
             rbMetric.isChecked = true
             rbImperial.isChecked = false
@@ -49,6 +53,7 @@ class accounts_page : AppCompatActivity() {
             rbMetric.isChecked = false
             rbImperial.isChecked = true
         }
+
         //-------------------------------------------------------------------------------------------------------------//
         //Add Entry
         addEntry.setOnClickListener {
@@ -80,11 +85,13 @@ class accounts_page : AppCompatActivity() {
         //Change metric in userdata
         rbMetric.setOnClickListener{
             GlobalDataClass.imperialOrMetric = "metric"
+            DBHandler.updateMetricToImperial(currentUserUID,"metric")
         }
         //-------------------------------------------------------------------------------------------------------------//
         //Change Imperial in userdata
         rbImperial.setOnClickListener{
             GlobalDataClass.imperialOrMetric = "imperial"
+            DBHandler.updateMetricToImperial(currentUserUID,"imperial")
         }
     }
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

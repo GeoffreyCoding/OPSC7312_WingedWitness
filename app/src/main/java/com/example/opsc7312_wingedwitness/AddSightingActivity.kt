@@ -50,6 +50,7 @@ private lateinit var ivCameraBtn: ImageView
 private lateinit var back: ImageView
 private lateinit var btnSpecies:Button
 private lateinit var userLocation: Location
+
 //Audio
 private var mediaRecorder: MediaRecorder? = null
 private var isRecording = false
@@ -66,6 +67,7 @@ private val REQUEST_LOCATION_PERMISSION = 1
 
 class AddSightingActivity : AppCompatActivity() {
 
+    private lateinit var myUser: String
     private lateinit var selectedSpecies: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -83,9 +85,7 @@ class AddSightingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addsighting)
         var dataValidation = dataValidation()
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
+        val DBHandler = DBHandler()
 
         //FindViews
         edtSightingName = findViewById(R.id.edtSightingName)
@@ -98,8 +98,9 @@ class AddSightingActivity : AppCompatActivity() {
         ivRecordBird = findViewById(R.id.ivRecordSghting)
         back = findViewById(R.id.Back)
         btnSpecies = findViewById(R.id.btnSpecies)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
+        //-------------------------------------------------------------------------------------------------------------//
         //Add the Species
         btnSpecies.setOnClickListener {
             showBirdSpeciesDialog()
@@ -126,12 +127,14 @@ class AddSightingActivity : AppCompatActivity() {
         //-------------------------------------------------------------------------------------------------------------//
         //button click listener to start the validation and the adding of the data to the object
         ivCameraBtn.setOnClickListener {
+
             // Check for camera permission
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.CAMERA
                 ) == PackageManager.PERMISSION_GRANTED
-            ) {
+            )
+            {
                 // Camera permission is granted, open the camera
                 openCamera()
             } else {
@@ -161,6 +164,10 @@ class AddSightingActivity : AppCompatActivity() {
         //AddSighting
         btnAddSighting.setOnClickListener {
 
+            for(user in GlobalDataClass.UserDataList){
+                myUser = user.userId
+            }
+
             //get data
             val sCount: String = edtSightingCount.text.toString()
             val sName = edtSightingName.text.toString()
@@ -176,7 +183,7 @@ class AddSightingActivity : AppCompatActivity() {
 
                 var sightingData = SightingData()
                 sightingData.sightingId = 0
-                sightingData.userId = 0
+                sightingData.userId = ""
                 sightingData.sightingCount = sCount.toInt()
                 sightingData.sightingLocation = sLocation
                 sightingData.sightingDate = sDate
@@ -196,6 +203,29 @@ class AddSightingActivity : AppCompatActivity() {
                     sightingData.imageFilePath = ""
                 }
                 GlobalDataClass.SightingDataList.add(sightingData)
+
+                sightingData.audioFilePath?.let { it1 ->
+                    sightingData.imageFilePath?.let { it2 ->
+                        DBHandler.addBirdToFireBase(
+                            it1,
+                            it2,
+                            sightingData.sightingCount,
+                            sightingData.sightingDate,
+                            sightingData.sightingId.toString(),
+                            sightingData.sightingLat.toString(),
+                            sightingData.sightingLng.toString(),
+                            sightingData.sightingLocation,
+                            sightingData.sightingName,
+                            sightingData.sightingSpecies,
+                            myUser){ success, result ->
+                            if (success) {
+                                Toast.makeText(this, result, Toast.LENGTH_SHORT)// result contains the new user's UID
+                            } else {
+                                Toast.makeText(this, result, Toast.LENGTH_SHORT)// result contains the error message
+                            }
+                        }
+                    }
+                }
 
                 Toast.makeText(this, "Sighting Added successfully!", Toast.LENGTH_SHORT).show()
 
@@ -302,7 +332,6 @@ class AddSightingActivity : AppCompatActivity() {
 
     //-------------------------------------------------------------------------------------------------------------//
     //Get Current Location
-
     private fun requestLocation() {
         if(checkLocationPermission()) {
             Log.d("Location", "requestLocation called")

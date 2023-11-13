@@ -22,23 +22,25 @@
         app:backgroundTint="@null"
         >
         <activity
-            android:name=".MainActivity"
+            android:name=".OpeningPage2"
             android:exported="true">
+            <!-- Intent filter moved here to make MainActivity the starting activity -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- AddSightingActivity Declaration -->
+        <!-- Other activities declarations -->
         <activity android:name=".Navigation"/>
+        <activity android:name=".MainActivity"/>
         <activity android:name=".AddSightingActivity" />
         <activity android:name=".HotSpotsMap" />
         <activity android:name=".QuizActivity"/>
-        <activity android:name=".HomePageActivity"/>
+        <!-- HomePageActivity no longer has the MAIN intent filter -->
+        <activity android:name=".HomePageActivity"
+            android:exported="true"/>
         <activity android:name=".accounts_page"/>
 
     </application>
-    </manifest>
-
-
+</manifest>

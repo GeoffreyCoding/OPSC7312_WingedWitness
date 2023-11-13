@@ -9,24 +9,28 @@ class dataValidation {
 
     //-----------------------------------------------------------------------------------------------------------------//
     //Validate the SignUp input
-     fun validateSingUpInput(email: String, password: String,confirmationPassword:String): Boolean {
+     fun validateSingUpInput(email: String, password: String,confirmationPassword:String): String {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
 
         if(confirmationPassword != password){
-            return false
+            return "Passwords do not match!"
         }
 
-        if (email.isEmpty() || !email.matches(emailPattern.toRegex())) {
-            // Invalid email format
-            return false
+        if (email.isEmpty() || password.isEmpty()) {
+            return "Empty fields are not allowed!"
         }
 
-        if (password.isEmpty() || password.length < 6) {
+        if (password.length < 6) {
             // Password should be at least 6 characters
-            return false
+            return "password must be atleast 6 characters long!"
         }
 
-        return true
+        if(!email.matches(emailPattern.toRegex())){
+            //invalid email format
+            return "Email is in the incorrect format!"
+        }
+
+        return "true"
     }
 
     //-----------------------------------------------------------------------------------------------------------------//
@@ -56,4 +60,16 @@ class dataValidation {
 
         return true
     }
+
+    //-----------------------------------------------------------------------------------------------------------------//
+    //Validate the Email input
+    fun validateEmail(email: String) : String {
+        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+        if(!email.matches(emailPattern.toRegex())){
+            //invalid email format
+            return "Email is in the incorrect format!"
+        }
+        return "true"
+    }
+
 }//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//

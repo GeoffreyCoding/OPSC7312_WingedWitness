@@ -5,16 +5,21 @@ Geoffrey Huth - ST10081932
 Gabriel Grobbelaar - ST10082002
 Liam Colbert - ST10081986
 -----------------------------------------------*/
+//---------------------------------------------------------------------------------------------------------------------//
+//Imports
 import android.app.Activity
 import android.widget.Toast
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import java.lang.ref.WeakReference
 
-
 class LocationPermissionHelper(val activity: WeakReference<Activity>) {
+
+    // A variable to call the PermissionManager class.
     private lateinit var permissionsManager: PermissionsManager
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    // Checking the permissions of the user's device.
     fun checkPermissions(onMapReady: () -> Unit) {
         if (PermissionsManager.areLocationPermissionsGranted(activity.get())) {
             onMapReady()
@@ -39,6 +44,8 @@ class LocationPermissionHelper(val activity: WeakReference<Activity>) {
         }
     }
 
+    //-----------------------------------------------------------------------------------------------------------------//
+    // Adding the decided choice to an array
     fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -46,4 +53,7 @@ class LocationPermissionHelper(val activity: WeakReference<Activity>) {
     ) {
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
+    //-----------------------------------------------------------------------------------------------------------------//
+
 }
+//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
