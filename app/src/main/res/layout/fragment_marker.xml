@@ -115,6 +115,37 @@
                 android:background="@android:color/white"
                 android:orientation="vertical">
 
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/userCardHeading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_below="@+id/cardHeading1"
+                    app:cardBackgroundColor="#ECECEC"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp">
+
+                    <!-- FrameLayout to hold TextView, navigation button, and add bird button -->
+                    <FrameLayout
+                        android:id="@+id/relUserHeading"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_below="@+id/relHeading1">
+
+                        <!-- TextView for additional information -->
+                        <TextView
+                            android:id="@+id/tv_User"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top|left"
+                            android:padding="16dp"
+                            android:text="Personal Sightings"
+                            android:textColor="@android:color/black"
+                            android:textSize="18dp" />
+
+                    </FrameLayout>
+                </androidx.cardview.widget.CardView>
+
                 <!-- CardView for user information -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cdView_User"
@@ -134,6 +165,37 @@
                         android:padding="16dp"
                         android:textColor="@android:color/black"
                         android:textSize="18sp" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/HotspotCardHeading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_below="@+id/cdView_User"
+                    app:cardBackgroundColor="#ECECEC"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp">
+
+                    <!-- FrameLayout to hold TextView, navigation button, and add bird button -->
+                    <FrameLayout
+                        android:id="@+id/relHotspotHeading"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_below="@+id/cdView_User">
+
+                        <!-- TextView for additional information -->
+                        <TextView
+                            android:id="@+id/tv_Hotspot"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top|left"
+                            android:padding="16dp"
+                            android:text="Hotspot Sightings"
+                            android:textColor="@android:color/black"
+                            android:textSize="18dp" />
+
+                    </FrameLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- CardView for hotspot information -->
