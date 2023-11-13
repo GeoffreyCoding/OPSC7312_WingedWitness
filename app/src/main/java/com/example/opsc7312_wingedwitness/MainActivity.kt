@@ -5,7 +5,7 @@ Geoffrey Huth - ST10081932
 Gabriel Grobbelaar - ST10082002
 Liam Colbert - ST10081986
 -----------------------------------------------*/
-//---------------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------//
 //Imports
 import android.content.Intent
 import android.os.Bundle
@@ -20,12 +20,12 @@ import com.google.firebase.ktx.initialize
 //import com.mapbox.android.gestures.Utils
 import kotlin.concurrent.thread
 
-//---------------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------//
 
 
 class MainActivity : AppCompatActivity() {
 
-    //-----------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //Declarations
     private lateinit var loginUnderline: View
     private lateinit var signUpUnderline: View
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loginEmail:TextView
     private lateinit var loginPassword:TextView
 
-    //-----------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //OnCreate Method
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.SignUpconfirmtxt)
         )
 
-        //-------------------------------------------------------------------------------------------------------------//
+        //----------------------------------------------------------------------------------------//
         //SignUp
         signUpTextView.setOnClickListener {
             isSignUpMode = !isSignUpMode
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         }
         var dataValidation = dataValidation()
 
-        //-------------------------------------------------------------------------------------------------------------//
+        //----------------------------------------------------------------------------------------//
         //Login
         buttonLogin.setOnClickListener {
             if(buttonLogin.text=="LogIn"){
@@ -197,14 +197,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //------------------------------------================----------------------------------------//
     //GetLowestInt
     fun getLowestInt() : UserData? {
         val userId = GlobalDataClass.UserDataList.minByOrNull { it.userId }
         return userId
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //On Login
     fun onLoginClick(view: View) {
         loginUnderline.visibility = View.VISIBLE
@@ -215,7 +215,7 @@ class MainActivity : AppCompatActivity() {
         buttonLogin.text = "LogIn"
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //On SignUp
     fun onSignUpClick(view: View) {
         signUpUnderline.visibility = View.VISIBLE
@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity() {
         buttonLogin.text = "Sign-Up"
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //Show Views
     private fun showViews(views: List<View>) {
         for (view in views) {
@@ -234,11 +234,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //-------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------//
     //Hide Views
     private fun hideViews(views: List<View>) {
         for (view in views) {
             view.visibility = View.GONE
         }
     }
-}//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
+}//------------------------------...ooo000 END OF CLASS 000ooo...---------------------------------//

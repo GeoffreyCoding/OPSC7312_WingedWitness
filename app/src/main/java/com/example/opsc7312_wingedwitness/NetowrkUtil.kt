@@ -14,11 +14,13 @@ import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
 
-private val EBIRD_URL =
-    "https://api.ebird.org/v2/ref/hotspot/geo?lat=-33.9249&lng=18.4241&dist=5.0"
+///----------------------------------------------------------------------------------------------///
+
 private val PARAM_API_KEY = "key"
 private val LOGGING_TAG = "URLWECREATED"
 private val EBIRD_REGIONAL_URL = "https://api.ebird.org/v2/data/obs/ZA-WC/recent"
+
+///----------------------------------------------------------------------------------------------///
 
 fun buildURLForEbirdRegional(): URL? {
     val buildUri: Uri = Uri.parse(EBIRD_REGIONAL_URL).buildUpon()
@@ -37,6 +39,8 @@ fun buildURLForEbirdRegional(): URL? {
     return url
 }
 
+///----------------------------------------------------------------------------------------------///
+
 fun buildURLForEbird(lng: Float, lat: Float, dist: Double): URL? {
     val buildUri: Uri = Uri.parse("https://api.ebird.org/v2/ref/hotspot/geo?lat=${lng}&lng=${lat}&dist=${dist}").buildUpon()
         .appendQueryParameter(
@@ -53,6 +57,8 @@ fun buildURLForEbird(lng: Float, lat: Float, dist: Double): URL? {
     Log.i(LOGGING_TAG, "buildURLForBird: $url")
     return url
 }
+
+///----------------------------------------------------------------------------------------------///
 
 fun buildURLForAllEbirdInfo(lng: Float, lat: Float): URL? {
     val buildUri: Uri = Uri.parse("https://api.ebird.org/v2/data/obs/geo/recent?lat=${lat}&lng=${lng}&sort=species&back=30&dist=0.5").buildUpon()
@@ -71,15 +77,10 @@ fun buildURLForAllEbirdInfo(lng: Float, lat: Float): URL? {
     return url
 }
 
+///----------------------------------------------------------------------------------------------///
+
 fun getSpeciesListForWesternCape(): List<String> {
     val speciesList = mutableListOf<String>()
-
-    // Coordinates for Cape Town as central point
-    val latitude = -33.9249f
-    val longitude = 18.4241f
-
-    // Set a larger distance to get a broader area (you can adjust this based on your needs)
-    val dist: Double = 50.0 // e.g., 50 km radius
 
     val url = buildURLForEbirdRegional()
 
@@ -95,7 +96,7 @@ fun getSpeciesListForWesternCape(): List<String> {
             val jsonArray = JSONArray(result.toString())
             for (i in 0 until jsonArray.length()) {
                 val jsonObject = jsonArray.getJSONObject(i)
-                speciesList.add(jsonObject.getString("comName")) // Assuming "comName" is the field containing the species name
+                speciesList.add(jsonObject.getString("comName"))
             }
         } catch (e: Exception) {
             Log.e(LOGGING_TAG, "Error reading from stream", e)
@@ -110,5 +111,5 @@ fun getSpeciesListForWesternCape(): List<String> {
 
     return speciesList
 }
-
+///---------------------------------------EndOfFile----------------------------------------------///
 

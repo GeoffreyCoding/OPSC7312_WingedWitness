@@ -59,6 +59,12 @@ class MarkerFragment : Fragment() {
         val tvUserBird: TextView = view.findViewById(R.id.tv_userBird)
         val emulatorCoordinates = arguments?.getParcelable<LatLng>("emulatorCoordinates")
 
+        val userSightedBirdsForMarker = GlobalDataClass.SightingDataList.filter { userSightedBird ->
+            userSightedBird.sightingLocation == placeName &&
+                    userSightedBird.sightingLat == markerCoordinates?.latitude ?: Float &&
+                    userSightedBird.sightingLng == markerCoordinates?.longitude ?: Float
+        }
+
         val btnClose = view.findViewById<ImageButton>(R.id.btn_close)
         // Find the LinearLayout where you want to add the CardViews
         btnClose.setOnClickListener {
@@ -117,20 +123,26 @@ class MarkerFragment : Fragment() {
             builder.show()
         }
 
-        if ((matchingBirds != null) && matchingBirds.isNotEmpty() && markerCoordinates != null) {
+        if (matchingBirds != null && matchingBirds.isNotEmpty() && markerCoordinates != null) {
+            // Filter the user-added birds for the current marker
+            val userSightedBirdsForMarker = GlobalDataClass.SightingDataList.filter { userSightedBird ->
+                userSightedBird.sightingLocation == placeName &&
+                        userSightedBird.sightingLat == markerCoordinates.latitude &&
+                        userSightedBird.sightingLng == markerCoordinates.longitude
+            }
 
-            if (hasUserSightedBirdsAtMarker(markerCoordinates.latitude.toFloat(), markerCoordinates.longitude.toFloat(), placeName)) {
-                // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
-                val userBirdNames = GlobalDataClass.SightingDataList.joinToString("\n") {
+            if (userSightedBirdsForMarker.isNotEmpty()) {
+                // Display only the user-added bird for the current marker
+                val userBirdNames = userSightedBirdsForMarker.joinToString("\n") {
                     "Sighted Bird:\n" +
                             "Bird Name: ${it.sightingName}\n" +
                             "Date: ${it.sightingDate}\n" +
                             "Location: ${it.sightingLocation}\n"
                 }
-
                 tvUserBird.text = userBirdNames
             }
 
+            // Display birds from the API
             val birdNames = matchingBirds.joinToString("\n") {
                 "Bird Name: ${it.comName}\n" +
                         "Bird Species: ${it.sciName}\n" +
@@ -139,9 +151,9 @@ class MarkerFragment : Fragment() {
             }
             tvBird.text = birdNames
 
-
-        } else if (GlobalDataClass.SightingDataList.isNotEmpty()) {
-            updateUserSightedBirdsData()
+        } else if (userSightedBirdsForMarker.isNotEmpty()) {
+            // Display only the user-added bird for the current marker
+            updateUserSightedBirdsData(placeName, markerCoordinates)
         } else {
             setNoBirdsMessage()
         }
@@ -157,26 +169,25 @@ class MarkerFragment : Fragment() {
 
     ///------------------------------------------------------------------------------------------///
 
-    private fun hasUserSightedBirdsAtMarker(lat: Float, lng: Float, placeName: String?): Boolean {
-        return GlobalDataClass.SightingDataList.any { userSightedBird ->
-            // Adjust the condition based on your requirements
-            userSightedBird.sightingLat == lat.toDouble() &&
-                    userSightedBird.sightingLng == lng.toDouble()
-        }
-    }
-
-    private fun updateUserSightedBirdsData() {
+    private fun updateUserSightedBirdsData(placeName: String?, markerCoordinates: LatLng?) {
         val tvUserBird = view?.findViewById<TextView>(R.id.tv_userBird)
 
-        if (GlobalDataClass.SightingDataList.isNotEmpty()) {
+        // Filter user-sighted birds based on the conditions for the current marker
+        val userSightedBirdsForMarker = GlobalDataClass.SightingDataList.filter { userSightedBird ->
+            userSightedBird.sightingLocation == placeName &&
+                    userSightedBird.sightingLat == markerCoordinates?.latitude &&
+                    userSightedBird.sightingLng == markerCoordinates?.longitude
+        }
+
+        if (userSightedBirdsForMarker.isNotEmpty()) {
             // Access the TextView in your fragment layout (assuming you have a TextView with id tv_bird)
-            val birdNames = GlobalDataClass.SightingDataList.joinToString("\n") {
+            val birdNames = userSightedBirdsForMarker.joinToString("\n") {
                 "Bird Name: ${it.sightingName}\n" +
                         "Date: ${it.sightingDate}\n" +
                         "Location: ${it.sightingLocation}\n"
             }
             tvUserBird?.text = birdNames
-            // Set the text of the TextView to the user-sighted bird data
+            // Set the text of the TextView to the user-sighted bird data for the current marker
         } else {
             setNoBirdsMessage()
         }
@@ -292,23 +303,14 @@ class MarkerFragment : Fragment() {
 
     private fun handleAddToHotspot(
         etBirdName: EditText, etSpecies: EditText, etAmount: EditText,
-        user: TextView, place: String, lat: Float, lng: Float
-    ) {
+        user: TextView, place: String, lat: Float, lng: Float) {
         for (user in GlobalDataClass.UserDataList) {
             myUser = user.userId
         }
 
-        val cleanedPlaceName = if (place.startsWith("\"") && place.endsWith("\"")) {
-            // Remove leading and trailing quotes
-            place.trim('\"')
-        } else {
-            // Keep the placeName as it is
-            place
-        }
         val birdName = etBirdName.text.toString()
         val species = etSpecies.text.toString()
         val amount = etAmount.text.toString().toIntOrNull()
-
 
         if (birdName.isNotEmpty() && species.isNotEmpty() && amount != null) {
             val newSighting = SightingData().apply {
@@ -359,15 +361,11 @@ class MarkerFragment : Fragment() {
         user.text = birdDetails
     }
 
-///-----------------------------------------------------------------------------------------------------------------///
-
+    ///------------------------------------------------------------------------------------------///
+    /// Companion object to create three types of instances dependent on the marker click.
     companion object {
-        fun newInstance(
-            placeName: String,
-            markerCoordinates: LatLng,
-            emulatorCoordinates: LatLng,
-            matchingBirds: List<ToolBox.TestBird>,
-        ): MarkerFragment {
+        fun newInstance(placeName: String, markerCoordinates: LatLng, emulatorCoordinates: LatLng,
+                        matchingBirds: List<ToolBox.TestBird>, ): MarkerFragment {
             val fragment = MarkerFragment()
             val args = Bundle()
             args.putString("placeName", placeName)
@@ -380,11 +378,10 @@ class MarkerFragment : Fragment() {
             return fragment
         }
 
-        fun newInstanceWithoutBirds(
-            placeName: String,
-            markerCoordinates: LatLng,
-            emulatorCoordinates: LatLng,
-        ): MarkerFragment {
+        ///--------------------------------------------------------------------------------------///
+
+        fun newInstanceWithoutBirds(placeName: String, markerCoordinates: LatLng,
+                                    emulatorCoordinates: LatLng, ): MarkerFragment {
             val fragment = MarkerFragment()
             val args = Bundle()
             args.putString("placeName", placeName)
@@ -394,11 +391,10 @@ class MarkerFragment : Fragment() {
             return fragment
         }
 
-        fun newInstanceForUserSightedBirds(
-            placeName: String,
-            markerCoordinates: LatLng,
-            emulatorCoordinates: LatLng
-        ): MarkerFragment {
+        ///--------------------------------------------------------------------------------------///
+
+        fun newInstanceForUserSightedBirds(placeName: String, markerCoordinates: LatLng,
+            emulatorCoordinates: LatLng): MarkerFragment {
             val fragment = MarkerFragment()
             val args = Bundle()
             args.putString("placeName", placeName)
@@ -410,6 +406,6 @@ class MarkerFragment : Fragment() {
         }
     }
 
-///-----------------------------------------------------------------------------------------------------------------///
+    ///------------------------------------------------------------------------------------------///
 }
-//-------------------------------------...ooo000 END OF CLASS 000ooo...-----------------------------------------------//
+///------------------------------...ooo000 END OF CLASS 000ooo...--------------------------------///

@@ -1,15 +1,22 @@
 package com.example.opsc7312_wingedwitness
-import android.app.Application
-import com.google.firebase.FirebaseApp
+/*-----------------------------------------------
+OPSC7312_POE_PART2
+Geoffrey Huth - ST10081932
+Gabriel Grobbelaar - ST10082002
+Liam Colbert - ST10081986
+-----------------------------------------------*/
+///----------------------------------------------------------------------------------------------///
+/// imports
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-
+///----------------------------------------------------------------------------------------------///
 class DBHandler {
     private val db = Firebase.firestore
     private val auth: FirebaseAuth = Firebase.auth
 
+    ///------------------------------------------------------------------------------------------///
     // Sign in user
     fun signInUser(email: String, password: String, callback: (Boolean, String?) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
@@ -24,7 +31,7 @@ class DBHandler {
                 }
             }
     }
-
+    ///------------------------------------------------------------------------------------------///
     // Function to search all documents for a specific userUID
     fun getUserDataByUserUID(userUID: String, callback: (UserData?) -> Unit) {
         // Query the 'users' collection for documents where 'userId' field matches the userUID
@@ -47,8 +54,14 @@ class DBHandler {
             }
     }
 
-
-    fun signUpUser(email: String, password: String, metricOrImperial: String, callback: (Boolean, String) -> Unit) {
+    ///------------------------------------------------------------------------------------------///
+    /// Function to create a user.
+    fun signUpUser(
+        email: String,
+        password: String,
+        metricOrImperial: String,
+        callback: (Boolean, String) -> Unit
+    ) {
         // First, create the user account with email and password
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -84,9 +97,10 @@ class DBHandler {
 
     }
 
+    ///------------------------------------------------------------------------------------------///
     //Update current users metricToImerial
-    fun updateMetricToImperial(userUID: String, newMetricToImperial: String){
-// Query the 'users' collection for documents where 'userUID' field matches the userUID
+    fun updateMetricToImperial(userUID: String, newMetricToImperial: String) {
+    // Query the 'users' collection for documents where 'userUID' field matches the userUID
         db.collection("users").whereEqualTo("userUID", userUID)
             .get()
             .addOnSuccessListener { querySnapshot ->
@@ -99,6 +113,8 @@ class DBHandler {
             }
     }
 
+    ///------------------------------------------------------------------------------------------///
+    /// Function to add birds in the database.
     fun addBirdToFireBase(
         audioFilePath: String,
         imageFilePath: String,
@@ -143,51 +159,8 @@ class DBHandler {
             }
     }
 
-    /*fun getBirdSightingsForUser(userUID: String, callback: (List<SightingData>, String?) -> Unit) {
-
-        // Create a query to retrieve bird sightings for a specific user
-        val query = db.collection("userBirds")
-            .whereEqualTo("userUID", userUID)
-
-        // Execute the query
-        query.get()
-            .addOnSuccessListener { result ->
-                // Parse the result and convert documents to BirdSighting objects
-                val birdSightings = result.documents.map { document ->
-                    val audioFilePath = document.getString("audioFilePath") ?: ""
-                    val imageFilePath = document.getString("imageFilePath") ?: ""
-                    val sightingCount = document.getLong("sightingCount")?.toInt() ?: 0
-                    val sightingDate = document.getString("sightingDate") ?: ""
-                    val sightingId = document.getString("sightingId") ?: ""
-                    val sightingLat = document.getString("sightingLat") ?: ""
-                    val sightingLng = document.getString("sightingLng") ?: ""
-                    val sightingLocation = document.getString("sightingLocation") ?: ""
-                    val sightingName = document.getString("sightingName") ?: ""
-                    val sightingSpecies = document.getString("sightingSpecies") ?: ""
-
-
-                    SightingData(
-                        sightingId.toInt(),
-                        userUID,
-                        sightingName,
-                        sightingSpecies,
-                        sightingCount,
-                        sightingDate,
-                        sightingLocation,
-                        imageFilePath,
-                        audioFilePath,
-                        sightingLat.toDouble(),
-                        sightingLng.toDouble(),
-                    )
-                }
-                // Pass the list of bird sightings to the callback
-                callback(birdSightings, null)
-            }
-            .addOnFailureListener { e ->
-                // Failed to fetch bird sightings
-                callback(emptyList(), "Error fetching bird sightings: ${e.localizedMessage}")
-            }
-    }*/
+    ///------------------------------------------------------------------------------------------///
+    /// Function to get any birds in the database.
     fun getBirdSightingsForUser(userUID: String, callback: (List<SightingData>, String?) -> Unit) {
 
         // Create a query to retrieve bird sightings for a specific user
@@ -232,4 +205,7 @@ class DBHandler {
                 callback(emptyList(), "Error fetching bird sightings: ${e.localizedMessage}")
             }
     }
+    ///------------------------------------------------------------------------------------------///
+
 }
+///---------------------------------------EndOfFile----------------------------------------------///
